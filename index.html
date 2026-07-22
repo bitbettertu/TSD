@@ -1,0 +1,954 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Смарт ТСД — макет</title>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/lucide-react@0.263.1/dist/umd/lucide-react.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  html, body, #root { height: 100%; margin: 0; }
+  body { background: #D7DDDE; -webkit-tap-highlight-color: transparent; }
+  * { box-sizing: border-box; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" data-presets="react">
+const { useState, useMemo, useEffect } = React;
+const { Truck, Boxes, Tag, ClipboardList, ListChecks, Trash2, Undo2, ChevronRight, ChevronLeft, Lock, Camera, ScanLine, Keyboard, Wifi, WifiOff, RefreshCw, AlertTriangle, Check, CircleCheck, Clock, Play, PackageCheck, ShoppingCart, Ticket, LogOut, ArrowLeftRight, User, Battery, Signal, Plus, X, Square, CheckSquare, QrCode, Search, Package, ShieldCheck } = LucideReact;
+
+
+/* ============================================================
+   Смарт ТСД · Umai Group
+   «Мои задачи» (task-движок) + свободный запуск операций.
+   Единый сканер (камера / поток / по одному / ассортимент),
+   подтверждение СБ по QR-бейджу. Кликабельный макет. Один файл.
+   ============================================================ */
+
+// ---- Токены дизайна -----------------------------------------
+const T = {
+  bg: "#EEF1F2", header: "#0C2B2E", headerText: "#EAF3F2", headerMuted: "#7FA3A3",
+  card: "#FFFFFF", border: "#E3E7E8", ink: "#132327", muted: "#61757A", faint: "#93A4A8",
+  primary: "#0E7C7B", primaryDark: "#0A5F5E",
+  urgent: "#D14343", urgentBg: "#FBEAEA", warn: "#B26A00", warnBg: "#FBF0DE",
+  info: "#2C6FB0", infoBg: "#E7F0FA", violet: "#6D5BC0", violetBg: "#EEEBF8",
+  wait: "#5B5F7A", waitBg: "#ECEDF4", done: "#0F7A54", doneBg: "#E3F2EA",
+  scanAccent: "#28E0D0",
+};
+
+// ---- Типы задач ---------------------------------------------
+const TYPE = {
+  receiving: { label: "Приёмка", Icon: Truck, color: T.primary, bg: "#E3F1F1" },
+  transfer:  { label: "Перемещение", Icon: Boxes, color: T.info, bg: T.infoBg },
+  pricing:   { label: "Ценники", Icon: Tag, color: T.warn, bg: T.warnBg },
+  count:     { label: "Пересчёт", Icon: ClipboardList, color: T.violet, bg: T.violetBg },
+  checklist: { label: "Чек-лист", Icon: ListChecks, color: T.done, bg: T.doneBg },
+  writeoff:  { label: "Списание", Icon: Trash2, color: T.urgent, bg: T.urgentBg },
+  return:    { label: "Возврат", Icon: Undo2, color: T.wait, bg: T.waitBg },
+};
+
+// ---- Демо-ассортимент (для сканера / весового) --------------
+const CATALOG = [
+  { name: "Молоко «Ак-Сүт» 2.5% 0.9л" },
+  { name: "Кефир «Ак-Сүт» 1л" },
+  { name: "Сметана «Ак-Сүт» 20% 400г" },
+  { name: "Сахар «Каинды» 1кг" },
+  { name: "Мука в/с «Акун» 2кг" },
+  { name: "Пиво «Арпа» 0.5л", excise: true },
+  { name: "Сигареты «Ош» пачка", excise: true },
+  { name: "Бананы 1 сорт", weight: true },
+  { name: "Яблоки «Семеренко»", weight: true },
+  { name: "Картофель молодой", weight: true },
+  { name: "Морковь", weight: true },
+  { name: "Крупа гречневая (развес)", weight: true },
+];
+
+// ---- Задачи (реалистичный день операциониста) ---------------
+const INITIAL_TASKS = [
+  { id: "t1", type: "receiving", subject: "Молоко «Ак-Сүт»", source: "Приезд поставщика · пост СБ", location: "Буферная зона",
+    priority: "urgent", assignee: "me", status: "new", deadline: { state: "now", label: "Ожидает у поста" },
+    order: null, excise: false, requiresPhoto: false, progress: { done: 0, total: 18 },
+    steps: ["Считать позиции: скан + факт / ассортимент+вес", "Отметить расхождения", "Подтверждение поста СБ (QR-бейдж)", "Провести «Поступление товаров» в 1С"] },
+  { id: "t2", type: "receiving", subject: "Сигареты · пиво «Арпа»", source: "Приезд поставщика · пост СБ", location: "Буферная зона",
+    priority: "urgent", assignee: "me", status: "new", deadline: { state: "now", label: "Ожидает у поста" },
+    order: null, excise: true, requiresPhoto: false, progress: { done: 0, total: 24 },
+    steps: ["Считать позиции сканером", "Сверить акцизные марки — скан DataMatrix", "Отметить расхождения", "Подтверждение поста СБ (QR-бейдж)", "Провести в 1С"] },
+  { id: "t3", type: "transfer", subject: "Перемещение №1204 от РЦ", source: "Доставка РЦ · доверительная", location: "Буфер · палеты в плёнке",
+    priority: "normal", assignee: "me", status: "new", deadline: { state: "soon", label: "до 14:00" },
+    order: "Заказ в РЦ №1188", excise: false, requiresPhoto: false, progress: { done: 0, total: 34 },
+    steps: ["Сверить накладную перемещения №1204", "Вскрыть плёнку (после старта)", "Считать позиции сканером", "Овощи — перевесить", "Расхождение → пара документов автоматически"] },
+  { id: "t4", type: "pricing", subject: "Переклеить ценники · 23 позиции", source: "Переоценка из 1С", location: "Секция «Бакалея»",
+    priority: "urgent", assignee: "me", status: "in_progress", deadline: { state: "soon", label: "до конца смены" },
+    order: null, excise: false, requiresPhoto: true, photoAttached: false, progress: { done: 8, total: 23 },
+    steps: ["Печать ценников (23 шт)", "Переклеить на полке", "Скан-проверка цены", "Фотоотчёт секции (обязательно)"] },
+  { id: "t5", type: "count", subject: "Пересчёт заморозки", source: "Аудит через СБ", location: "Морозильный склад",
+    priority: "urgent", assignee: "me", status: "in_progress", deadline: { state: "overdue", label: "просрочено 25 мин" },
+    order: null, blind: true, excise: false, requiresPhoto: false, progress: { done: 12, total: 40 },
+    steps: ["Счёт вслепую — остаток скрыт", "Скан позиции + факт", "Завершить зону"] },
+  { id: "t6", type: "count", subject: "Пересчёт группы «Бакалея»", source: "Запрос бухгалтерии", location: "Секция «Бакалея»",
+    priority: "normal", assignee: "me", status: "new", deadline: { state: "ok", label: "до конца смены" },
+    order: null, blind: true, excise: false, requiresPhoto: false, progress: { done: 0, total: 40 },
+    steps: ["Счёт вслепую — остаток скрыт", "Скан позиции + факт", "Завершить зону"] },
+  { id: "t7", type: "writeoff", subject: "Списание · брак 6 позиций", source: "Глава отдела «Фрукты-овощи»", location: "Буфер · корзина",
+    priority: "normal", assignee: "me", status: "waiting", deadline: { state: "ok", label: "цепочка подписей" },
+    order: null, excise: false, requiresPhoto: true, photoAttached: true,
+    chain: [{ role: "Операционист", done: true }, { role: "Куратор", done: true }, { role: "Менеджер", done: true },
+      { role: "Администратор", done: false, current: true }, { role: "Бухгалтер", done: false }, { role: "Проверка СБ", done: false }],
+    steps: [] },
+  { id: "t8", type: "count", subject: "Плановая проверка", source: "График СБ", location: "Скрыто до старта",
+    priority: "normal", assignee: "pool", status: "hidden", deadline: { state: "ok", label: "закрытая задача" },
+    order: null, blind: true, hidden: true, excise: false, requiresPhoto: false, progress: { done: 0, total: 15 },
+    hiddenSubject: "Пересчёт кассовой зоны · сигареты", steps: ["Счёт вслепую — остаток скрыт", "Скан позиции + факт", "Завершить зону"] },
+  { id: "t9", type: "pricing", subject: "Переклеить ценники · 5 позиций", source: "Переоценка из 1С", location: "Секция «Химия»",
+    priority: "normal", assignee: "pool", status: "new", deadline: { state: "soon", label: "до 15:30" },
+    order: null, excise: false, requiresPhoto: true, photoAttached: false, progress: { done: 0, total: 5 },
+    steps: ["Печать ценников (5 шт)", "Переклеить на полке", "Скан-проверка цены", "Фотоотчёт секции"] },
+  { id: "t10", type: "return", subject: "Снять в возврат · просрочка", source: "Глава отдела «Молочка»", location: "Полка → именная зона",
+    priority: "normal", assignee: "pool", status: "new", deadline: { state: "ok", label: "до конца дня" },
+    order: null, excise: false, requiresPhoto: false, progress: { done: 0, total: 7 },
+    steps: ["Скан при снятии с полки", "Партия — автоматически", "Товар в именную зону поставщика", "Отгрузка — отдельной задачей"] },
+  { id: "t11", type: "checklist", subject: "Чек-лист открытия смены", source: "Система · 08:00", location: "Торговый зал",
+    priority: "low", assignee: "me", status: "done", deadline: { state: "done", label: "Готово 09:12" }, order: null, requiresPhoto: false, steps: [] },
+  { id: "t12", type: "receiving", subject: "Приёмка напитков «Шоро»", source: "Приезд поставщика", location: "Буферная зона",
+    priority: "normal", assignee: "me", status: "done", deadline: { state: "done", label: "Готово 10:30 · 42 стр." }, order: null, requiresPhoto: false, steps: [] },
+];
+
+// ============================================================
+//  СПЕЦИФИКАЦИИ ОПЕРАЦИЙ (свободный запуск)
+//  Типы шагов: choice | confirm | count | route | photo | badge | approval | summary
+// ============================================================
+const OP_SPECS = {
+  receiving: {
+    label: "Приёмка", Icon: Truck,
+    variants: [
+      { key: "supplier", label: "Прямой поставщик", desc: "Поток А · свободный набор, пост СБ, акциз",
+        steps: [
+          { type: "count", title: "Счёт позиций", target: 18, note: "Штучное — скан + факт. Весовое — из ассортимента, ввод веса." },
+          { type: "choice", title: "Расхождения",
+            options: [{ label: "Расхождений нет" }, { label: "Есть недовоз / брак / срок", desc: "Позиция минусуется, сумма корректируется по факту" }] },
+          { type: "badge", title: "Подтверждение поста СБ", role: "Сотрудник СБ",
+            context: ["Товар на поддоне в буферной зоне", "СБ визуально сверил приёмку"],
+            note: "СБ подтверждает приёмку сканом своего QR-бейджа на устройстве оператора. Отдельное устройство для СБ не нужно." },
+          { type: "summary", title: "Проведение", action: "Провести «Поступление товаров»", note: "Накладная — в архив (боксфайл)." },
+        ] },
+      { key: "dc", label: "С распределительного центра", desc: "Поток Б · перемещение, доверительная приёмка",
+        steps: [
+          { type: "choice", title: "Накладная перемещения",
+            options: [{ label: "Перемещение №1204 (от РЦ)", desc: "Документ-ожидание есть в 1С" }, { label: "Другая накладная" }] },
+          { type: "confirm", title: "Доверительная приёмка",
+            items: [{ label: "Палеты в буферной зоне" }, { label: "Плёнку вскрываю только сейчас" }] },
+          { type: "count", title: "Счёт позиций", target: 34, note: "Потоковый скан. Овощи — из ассортимента, ввод веса." },
+          { type: "confirm", title: "Овощи", items: [{ label: "Овощи перевешены (усушка/утруска — норма)", optional: true }] },
+          { type: "choice", title: "Расхождения",
+            options: [{ label: "Совпало — один документ «Перемещение»" }, { label: "Недопоставка — пара документов", desc: "«Перемещение» + «Перемещение недопоставка» автоматически" }] },
+          { type: "badge", title: "Подтверждение поста СБ", role: "Сотрудник СБ",
+            context: ["Палеты в буферной зоне", "СБ визуально сверил перемещение"],
+            note: "Пост СБ на буфере подтверждает движение сканом QR-бейджа." },
+          { type: "summary", title: "Проведение", action: "Провести перемещение в 1С" },
+        ] },
+    ],
+  },
+
+  transfer: {
+    label: "Перемещение", Icon: Boxes,
+    variants: [
+      { key: "to_zal", label: "Склад маркета → торговый зал", desc: "Внутреннее перемещение",
+        steps: [{ type: "count", title: "Скан позиций", target: 12, note: "Скан + количество." },
+          { type: "summary", title: "Проведение", action: "Сформировать «Перемещение»" }] },
+      { key: "to_market", label: "Маркет → маркет", desc: "Редко · по договорённости руководителей",
+        steps: [{ type: "confirm", title: "Согласование", items: [{ label: "Согласовано руководителями / заведующими" }] },
+          { type: "count", title: "Скан позиций", target: 8 },
+          { type: "summary", title: "Проведение", action: "Сформировать «Перемещение»", note: "Транспорт и приёмка получателем — уточняется." }] },
+      { key: "to_rc", label: "Маркет → РЦ (возвратный поток)", desc: "Оформляется перемещением",
+        steps: [{ type: "confirm", title: "Возврат на РЦ", items: [{ label: "Возвратный поток на РЦ" }] },
+          { type: "count", title: "Скан позиций", target: 10 },
+          { type: "summary", title: "Проведение", action: "Сформировать «Перемещение» (на РЦ)" }] },
+    ],
+  },
+
+  count: {
+    label: "Инвентаризация", Icon: ClipboardList,
+    variants: [
+      { key: "selective", label: "Выборочная", desc: "Основная практика · группа или список позиций",
+        steps: [{ type: "choice", title: "Что считаем", options: [{ label: "Товарная группа" }, { label: "Список позиций" }] },
+          { type: "confirm", title: "Зона счёта", hint: "Параллельные счётчики — у каждого своя зона", items: [{ label: "Зона закреплена за мной" }] },
+          { type: "count", title: "Счёт (вслепую)", target: 40, blind: true, note: "Учётный остаток скрыт. Развесное — из ассортимента, ввод веса." },
+          { type: "summary", title: "Завершение зоны", action: "Завершить зону", note: "Ведомость расхождений → у директора/бухгалтера. Право «применить» и повторный счёт спорных строк — до применения." }] },
+      { key: "full", label: "Полная", desc: "Реже · магазин работает, малолюдные часы",
+        steps: [{ type: "confirm", title: "Запуск полной инвентаризации", items: [{ label: "Малолюдные часы" }, { label: "Блокировка операций включена" }] },
+          { type: "confirm", title: "Зона счёта", items: [{ label: "Зона закреплена за мной" }] },
+          { type: "count", title: "Счёт (вслепую)", target: 60, blind: true, note: "Учётный остаток скрыт." },
+          { type: "summary", title: "Завершение зоны", action: "Завершить зону", note: "Слияние строк нескольких устройств — механика уточняется." }] },
+    ],
+  },
+
+  writeoff: {
+    label: "Списание", Icon: Trash2,
+    steps: [
+      { type: "choice", title: "Причина списания",
+        options: [{ label: "Брак" }, { label: "Истёк срок" }, { label: "Бой" }, { label: "Разморозка" }, { label: "Нетоварный вид" }] },
+      { type: "count", title: "Скан позиций в корзину", target: 6, note: "Весовое — из ассортимента, ввод веса." },
+      { type: "route", title: "Куда направить товар?", hint: "Развилка «плохого товара» — четыре исхода",
+        options: [{ label: "Вернуть на полку", desc: "Товар пригоден", tone: "done" }, { label: "Списать", desc: "Акт списания · норматив 0,1%", tone: "urgent" },
+          { label: "Возврат поставщику", desc: "В именную зону", tone: "info" }, { label: "Купон", desc: "Выкуп персоналом со скидкой", tone: "violet" }] },
+      { type: "photo", title: "Фото корзины", note: "Вопрос к СБ: если фото принимается как доказательство — утилизация не ждёт круга подписей." },
+      { type: "approval", title: "Электронное согласование", chain: ["Операционист", "Куратор", "Менеджер магазина", "Администратор", "Бухгалтер", "Проверка СБ"] },
+      { type: "summary", title: "Отправка", action: "Отправить на согласование", note: "Цепочку ролей сохраняем, убираем очередь бумаги. Эскалация по дедлайнам." },
+    ],
+  },
+
+  return: {
+    label: "Возврат", Icon: Undo2,
+    variants: [
+      { key: "take", label: "Снять в возврат (поставщику)", desc: "Скан при снятии с полки · партия определяется сразу",
+        steps: [{ type: "choice", title: "Причина", options: [{ label: "Истёк срок" }, { label: "Брак" }, { label: "Нетоварный вид" }, { label: "Акционные излишки" }] },
+          { type: "count", title: "Скан в момент снятия", target: 7, note: "Статус: на точке, но вне продажи. Партия — автоматически." },
+          { type: "summary", title: "Перемещение в зону", action: "В именную зону поставщика", note: "Автозаказ и e-grocery больше не видят снятый товар как доступный." }] },
+      { key: "ship", label: "Отгрузить возврат (поставщику)", desc: "Автосборка «Комплексного возврата» при приезде машины",
+        steps: [{ type: "choice", title: "Зона поставщика", options: [{ label: "Поставщик «Ак-Сүт»" }, { label: "Поставщик «Шоро»" }, { label: "Другой" }] },
+          { type: "badge", title: "Двойной пересчёт: СБ", role: "Сотрудник СБ", context: ["Операционист пересчитал", "3 копии (операционист / СБ / поставщик)"],
+            note: "СБ подтверждает второй пересчёт сканом QR-бейджа." },
+          { type: "summary", title: "Формирование документа", action: "Сформировать «Комплексный возврат»", note: "1С раскладывает по партиям-поставкам (до 7 мес.) с привязкой к ЭСФ." }] },
+      { key: "customer", label: "От покупателя", desc: "Маршрутизатор без собственного складского документа",
+        steps: [{ type: "route", title: "Оценка пригодности",
+          options: [{ label: "Годен → на полку", desc: "Остаток восстанавливается чеком возврата", tone: "done" },
+            { label: "Негоден → на списание", desc: "Уходит в поток списания", tone: "urgent" }, { label: "Брак поставщика", desc: "В именную зону", tone: "info" }] },
+          { type: "summary", title: "Маршрутизация", action: "Применить решение" }] },
+      { key: "to_rc", label: "Маркет → РЦ", desc: "Оформляется перемещением (возвратный поток)",
+        steps: [{ type: "count", title: "Скан позиций", target: 9 }, { type: "summary", title: "Проведение", action: "Оформить перемещением (на РЦ)" }] },
+    ],
+  },
+
+  pricing: {
+    label: "Ценники", Icon: Tag,
+    variants: [
+      { key: "print", label: "Печать по переоценке", desc: "Задача из 1С · обязательный фотоотчёт",
+        steps: [{ type: "count", title: "Печать и переклейка", target: 23, note: "Печать → переклейка на полке." },
+          { type: "photo", title: "Фотоотчёт секции" }, { type: "summary", title: "Завершение", action: "Завершить переоценку" }] },
+      { key: "check", label: "Проверка цены сканером", desc: "Цена на полке = цена в системе",
+        steps: [{ type: "count", title: "Скан-проверка ценников", target: 10, note: "Расхождение → автозадача на переклейку." },
+          { type: "summary", title: "Завершение", action: "Готово" }] },
+    ],
+  },
+};
+
+// ---- Мелкие кусочки -----------------------------------------
+function DeadlineChip({ deadline }) {
+  const map = { now: { c: T.urgent, bg: T.urgentBg, Icon: Clock }, overdue: { c: T.urgent, bg: T.urgentBg, Icon: AlertTriangle },
+    soon: { c: T.warn, bg: T.warnBg, Icon: Clock }, ok: { c: T.muted, bg: "#F1F4F4", Icon: Clock }, done: { c: T.done, bg: T.doneBg, Icon: Check } };
+  const s = map[deadline.state] || map.ok; const Ic = s.Icon;
+  return (
+    <span style={{ display: "inline-flex", alignItems: "center", gap: 5, color: s.c, background: s.bg, fontSize: 12.5, fontWeight: 600, padding: "4px 9px", borderRadius: 8, whiteSpace: "nowrap", fontVariantNumeric: "tabular-nums" }}>
+      <Ic size={13} strokeWidth={2.4} /> {deadline.label}
+    </span>
+  );
+}
+function Pill({ children, color, bg }) {
+  return <span style={{ display: "inline-flex", alignItems: "center", gap: 5, color, background: bg, fontSize: 12, fontWeight: 700, padding: "3px 9px", borderRadius: 20, letterSpacing: 0.2 }}>{children}</span>;
+}
+function ProgressBar({ done, total }) {
+  const pct = total ? Math.round((done / total) * 100) : 0;
+  return (
+    <div style={{ marginTop: 10 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12, color: T.muted, marginBottom: 5, fontWeight: 600 }}>
+        <span>В работе</span><span style={{ fontVariantNumeric: "tabular-nums", color: T.ink }}>{done} / {total}</span>
+      </div>
+      <div style={{ height: 6, background: "#EAEEEE", borderRadius: 4, overflow: "hidden" }}>
+        <div style={{ width: `${pct}%`, height: "100%", background: T.primary, borderRadius: 4, transition: "width .3s" }} />
+      </div>
+    </div>
+  );
+}
+
+// ---- Сканер (камера / поток / по одному / ассортимент) ------
+function ScannerModal({ title, initialView = "scan", onAdd, onClose }) {
+  const [view, setView] = useState(initialView);
+  const [mode, setMode] = useState("stream");
+  const [items, setItems] = useState([]);
+  const [pending, setPending] = useState(null);
+  const [kind, setKind] = useState("qty");
+  const [val, setVal] = useState("1");
+  const [search, setSearch] = useState("");
+  const [flash, setFlash] = useState(false);
+
+  const pieceItems = CATALOG.filter((c) => !c.weight);
+  const add = (name, qty, kg) => { setItems((p) => [{ name, qty, kg }, ...p]); onAdd({ name, qty, kg }); };
+
+  const doScan = () => {
+    const it = pieceItems[Math.floor(Math.random() * pieceItems.length)];
+    if (mode === "stream") { add(it.name, 1); setFlash(true); setTimeout(() => setFlash(false), 160); }
+    else { setPending({ name: it.name }); setKind("qty"); setVal("1"); setView("entry"); }
+  };
+  const pick = (c) => {
+    if (c.weight) { setPending({ name: c.name, weight: true }); setKind("weight"); setVal(""); }
+    else { setPending({ name: c.name }); setKind("qty"); setVal("1"); }
+    setView("entry");
+  };
+  const confirmEntry = () => {
+    if (kind === "weight") { const v = val.replace(",", "."); if (!v || isNaN(Number(v)) || Number(v) <= 0) return; add(pending.name, 1, v); }
+    else { add(pending.name, Math.max(1, parseInt(val) || 1)); }
+    setPending(null); setView("scan");
+  };
+  const filtered = CATALOG.filter((c) => c.name.toLowerCase().includes(search.toLowerCase()));
+  const stepBtn = { width: 52, height: 52, borderRadius: 26, border: "none", cursor: "pointer", background: "rgba(255,255,255,.12)", color: "#fff", fontSize: 26, fontWeight: 700 };
+
+  return (
+    <div style={{ position: "absolute", inset: 0, zIndex: 60, background: "#08191B", display: "flex", flexDirection: "column" }}>
+      <style>{`@keyframes scly{0%{top:14%}50%{top:80%}100%{top:14%}}`}</style>
+      <div style={{ padding: "14px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", color: T.headerText }}>
+        <div>
+          <div style={{ fontSize: 16, fontWeight: 700 }}>{title || "Сканирование"}</div>
+          <div style={{ fontSize: 12.5, color: T.headerMuted }}>Добавлено: {items.length}</div>
+        </div>
+        <button onClick={onClose} style={{ background: T.primary, border: "none", color: "#fff", borderRadius: 10, padding: "9px 16px", cursor: "pointer", fontWeight: 700, fontSize: 14 }}>Готово</button>
+      </div>
+
+      {view === "scan" && (
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden", padding: "0 16px 16px" }}>
+          <div style={{ display: "flex", gap: 6, background: "rgba(255,255,255,.08)", borderRadius: 12, padding: 4, marginBottom: 14 }}>
+            {[["stream", "Поток"], ["single", "По одному + кол-во"]].map(([m, l]) => (
+              <button key={m} onClick={() => setMode(m)} style={{ flex: 1, padding: "9px 6px", borderRadius: 9, border: "none", cursor: "pointer", fontSize: 13, fontWeight: 700, background: mode === m ? T.primary : "transparent", color: mode === m ? "#fff" : T.headerMuted }}>{l}</button>
+            ))}
+          </div>
+          <button onClick={doScan} style={{ position: "relative", height: 190, borderRadius: 16, border: "none", cursor: "pointer", background: flash ? "#13403F" : "#04292B", overflow: "hidden", flexShrink: 0 }}>
+            <div style={{ position: "absolute", inset: 26, borderRadius: 10, border: `2px solid ${T.scanAccent}55` }} />
+            <div style={{ position: "absolute", left: "16%", right: "16%", height: 2, background: T.scanAccent, boxShadow: `0 0 10px ${T.scanAccent}`, animation: "scly 2.4s linear infinite" }} />
+            <div style={{ position: "absolute", inset: 0, display: "grid", placeItems: "center", color: "#7FBFBD", pointerEvents: "none" }}>
+              <div style={{ textAlign: "center" }}><ScanLine size={30} /><div style={{ marginTop: 8, fontSize: 13, fontWeight: 600 }}>{mode === "stream" ? "Наводите на коды подряд" : "Наведите на код"}</div></div>
+            </div>
+          </button>
+          <div style={{ fontSize: 12, color: T.headerMuted, textAlign: "center", margin: "10px 0 12px", lineHeight: 1.4 }}>
+            {mode === "stream" ? "Камера считывает коды подряд — кнопку жать не нужно. Тап = имитация скана." : "Скан одного кода → окно ввода количества."}
+          </div>
+          <div style={{ flex: 1, overflowY: "auto", background: "rgba(255,255,255,.05)", borderRadius: 12, padding: items.length ? 4 : 0 }}>
+            {items.length === 0 ? (
+              <div style={{ color: T.headerMuted, fontSize: 13, textAlign: "center", padding: "22px 12px" }}>Пока ничего не отсканировано</div>
+            ) : items.map((it, i) => (
+              <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px", borderBottom: i < items.length - 1 ? "1px solid rgba(255,255,255,.07)" : "none", color: T.headerText }}>
+                <span style={{ fontSize: 14 }}>{it.name}</span>
+                <span style={{ fontSize: 14, fontWeight: 700, color: T.scanAccent, fontVariantNumeric: "tabular-nums" }}>{it.kg ? `${it.kg} кг` : `× ${it.qty}`}</span>
+              </div>
+            ))}
+          </div>
+          <button onClick={() => { setSearch(""); setView("catalog"); }} style={{ marginTop: 12, width: "100%", padding: 14, borderRadius: 12, border: "1px solid rgba(255,255,255,.18)", background: "transparent", color: T.headerText, cursor: "pointer", fontSize: 15, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+            <Search size={18} /> Выбрать из ассортимента (весовой)
+          </button>
+        </div>
+      )}
+
+      {view === "entry" && (
+        <div style={{ flex: 1, padding: "0 16px 16px", display: "flex", flexDirection: "column" }}>
+          <div style={{ background: "rgba(255,255,255,.06)", borderRadius: 14, padding: 16, marginBottom: 18 }}>
+            <div style={{ fontSize: 12.5, color: T.headerMuted }}>{pending?.weight ? "Весовой товар" : "Товар"}</div>
+            <div style={{ fontSize: 16, fontWeight: 700, color: T.headerText, marginTop: 2 }}>{pending?.name}</div>
+          </div>
+          {kind === "qty" ? (
+            <div style={{ display: "flex", alignItems: "center", gap: 14, justifyContent: "center", marginBottom: 18 }}>
+              <button onClick={() => setVal(String(Math.max(1, (parseInt(val) || 1) - 1)))} style={stepBtn}>−</button>
+              <input value={val} onChange={(e) => setVal(e.target.value.replace(/\D/g, ""))} inputMode="numeric" style={{ width: 96, textAlign: "center", fontSize: 30, fontWeight: 800, padding: "10px", borderRadius: 12, border: "none", background: "rgba(255,255,255,.1)", color: "#fff", outline: "none" }} />
+              <button onClick={() => setVal(String((parseInt(val) || 0) + 1))} style={stepBtn}>+</button>
+            </div>
+          ) : (
+            <div style={{ marginBottom: 18 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, background: "rgba(255,255,255,.1)", borderRadius: 12, padding: "0 16px" }}>
+                <input value={val} onChange={(e) => setVal(e.target.value.replace(/[^\d.,]/g, ""))} inputMode="decimal" placeholder="0.000" style={{ flex: 1, fontSize: 30, fontWeight: 800, padding: "14px 0", border: "none", background: "transparent", color: "#fff", outline: "none" }} />
+                <span style={{ fontSize: 18, color: T.headerMuted, fontWeight: 700 }}>кг</span>
+              </div>
+              <div style={{ fontSize: 12.5, color: T.headerMuted, marginTop: 8 }}>Весовой товар без ШК — вес вводится вручную (макет весов).</div>
+            </div>
+          )}
+          <div style={{ marginTop: "auto", display: "flex", gap: 10 }}>
+            <button onClick={() => { setPending(null); setView("scan"); }} style={{ padding: "14px 20px", borderRadius: 12, border: "1px solid rgba(255,255,255,.18)", background: "transparent", color: T.headerText, cursor: "pointer", fontWeight: 700 }}>Отмена</button>
+            <button onClick={confirmEntry} style={{ flex: 1, padding: 14, borderRadius: 12, border: "none", background: T.primary, color: "#fff", cursor: "pointer", fontSize: 16, fontWeight: 700 }}>Добавить</button>
+          </div>
+        </div>
+      )}
+
+      {view === "catalog" && (
+        <div style={{ flex: 1, padding: "0 16px 16px", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,.1)", borderRadius: 12, padding: "0 12px", marginBottom: 12 }}>
+            <Search size={18} color={T.headerMuted} />
+            <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Поиск по ассортименту" style={{ flex: 1, padding: "12px 0", border: "none", background: "transparent", color: "#fff", fontSize: 15, outline: "none" }} />
+          </div>
+          <div style={{ flex: 1, overflowY: "auto" }}>
+            {filtered.map((c, i) => (
+              <button key={i} onClick={() => pick(c)} style={{ display: "flex", width: "100%", textAlign: "left", alignItems: "center", gap: 10, padding: "13px 10px", background: "transparent", border: "none", borderBottom: "1px solid rgba(255,255,255,.07)", cursor: "pointer", color: T.headerText }}>
+                <Package size={18} color={c.weight ? T.scanAccent : T.headerMuted} />
+                <span style={{ flex: 1, fontSize: 14.5 }}>{c.name}</span>
+                {c.weight && <span style={{ fontSize: 11, fontWeight: 800, color: T.scanAccent, background: "rgba(40,224,208,.14)", padding: "2px 7px", borderRadius: 6 }}>весовой</span>}
+                {c.excise && <span style={{ fontSize: 11, fontWeight: 800, color: "#E8C86A", background: "rgba(232,200,106,.14)", padding: "2px 7px", borderRadius: 6 }}>акциз</span>}
+              </button>
+            ))}
+          </div>
+          <button onClick={() => setView("scan")} style={{ marginTop: 12, width: "100%", padding: 13, borderRadius: 12, border: "1px solid rgba(255,255,255,.18)", background: "transparent", color: T.headerText, cursor: "pointer", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+            <ChevronLeft size={18} /> К сканеру
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ---- Панель счёта (вызывает сканер) -------------------------
+function CountPanel({ done, total, blind, note, title, openScanner, onAdd }) {
+  const [bc, setBc] = useState("");
+  return (
+    <div style={{ background: T.card, border: `1px solid ${T.border}`, borderRadius: 14, padding: 16 }}>
+      <div style={{ textAlign: "center", marginBottom: 14 }}>
+        <div style={{ fontSize: 34, fontWeight: 800, color: T.ink, fontVariantNumeric: "tabular-nums" }}>
+          {done} <span style={{ color: T.faint, fontWeight: 600, fontSize: 22 }}>/ {total}</span>
+        </div>
+        <div style={{ fontSize: 13, color: T.muted }}>позиций считано</div>
+      </div>
+      <button onClick={() => openScanner({ title: title || "Счёт позиций", onAdd })} style={{ width: "100%", padding: "16px", borderRadius: 12, border: "none", cursor: "pointer", background: T.primary, color: "#fff", fontSize: 16, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+        <Camera size={22} /> Сканировать позицию
+      </button>
+      <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
+        <input value={bc} onChange={(e) => setBc(e.target.value.replace(/\D/g, ""))} placeholder="Ввести ШК вручную" inputMode="numeric" style={{ flex: 1, padding: "12px", borderRadius: 10, border: `1px solid ${T.border}`, fontSize: 15, color: T.ink, outline: "none" }} />
+        <button onClick={() => { if (bc) { onAdd({ name: `Ручной ввод · ШК ${bc}`, qty: 1 }); setBc(""); } }} style={{ padding: "0 16px", borderRadius: 10, border: `1px solid ${T.border}`, background: "#F5F7F7", cursor: "pointer", color: T.ink, fontWeight: 700, display: "flex", alignItems: "center", gap: 6 }}>
+          <Keyboard size={18} /> Ввод
+        </button>
+      </div>
+      <button onClick={() => openScanner({ title: title || "Счёт позиций", onAdd, initialView: "catalog" })} style={{ width: "100%", marginTop: 10, padding: "13px", borderRadius: 10, border: `1px solid ${T.border}`, background: "#F5F7F7", cursor: "pointer", color: T.ink, fontSize: 15, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+        <Search size={18} /> Выбрать из ассортимента (весовой)
+      </button>
+      {note && <div style={{ fontSize: 12.5, color: T.muted, marginTop: 12, lineHeight: 1.4 }}>{note}</div>}
+      {blind && (
+        <div style={{ fontSize: 12.5, color: T.violet, background: T.violetBg, borderRadius: 8, padding: "8px 10px", marginTop: 10, display: "flex", alignItems: "center", gap: 6, fontWeight: 600 }}>
+          <Lock size={14} /> Слепой счёт — учётный остаток скрыт
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ---- Карточка задачи ----------------------------------------
+function TaskCard({ task, onOpen }) {
+  const meta = TYPE[task.type]; const Icon = meta.Icon;
+  const isHidden = task.status === "hidden";
+  const subject = isHidden ? "Плановая проверка" : task.subject;
+  return (
+    <button onClick={() => onOpen(task.id)} style={{ display: "block", width: "100%", textAlign: "left", cursor: "pointer", background: T.card, border: `1px solid ${T.border}`, borderRadius: 16, padding: 14, marginBottom: 10, boxShadow: "0 1px 2px rgba(19,35,39,.04)", borderLeft: task.priority === "urgent" || task.deadline.state === "overdue" ? `4px solid ${T.urgent}` : `1px solid ${T.border}` }}>
+      <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+        <div style={{ width: 44, height: 44, borderRadius: 12, flexShrink: 0, background: meta.bg, display: "grid", placeItems: "center" }}>
+          <Icon size={22} strokeWidth={2.1} color={meta.color} />
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2 }}>
+            <span style={{ fontSize: 11.5, fontWeight: 800, letterSpacing: 0.6, textTransform: "uppercase", color: meta.color }}>{meta.label}</span>
+            {task.priority === "urgent" && <Pill color={T.urgent} bg={T.urgentBg}>Срочно</Pill>}
+            {task.excise && <Pill color={T.ink} bg="#F0EAD6">Акциз</Pill>}
+          </div>
+          <div style={{ fontSize: 16, fontWeight: 700, color: T.ink, lineHeight: 1.25 }}>{subject}</div>
+          <div style={{ fontSize: 13, color: T.muted, marginTop: 3, display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+            {isHidden && <Lock size={13} />}<span>{task.source}</span><span style={{ color: T.faint }}>·</span><span>{task.location}</span>
+          </div>
+        </div>
+        <ChevronRight size={20} color={T.faint} style={{ flexShrink: 0, marginTop: 10 }} />
+      </div>
+      {task.status === "in_progress" && task.progress && <ProgressBar done={task.progress.done} total={task.progress.total} />}
+      {task.status === "waiting" && task.chain && (
+        <div style={{ marginTop: 10, display: "flex", flexWrap: "wrap", gap: 6, fontSize: 12 }}>
+          {task.chain.map((c, i) => (
+            <span key={i} style={{ display: "inline-flex", alignItems: "center", gap: 3, color: c.done ? T.done : c.current ? T.warn : T.faint, fontWeight: 600 }}>
+              {c.done ? <Check size={12} strokeWidth={3} /> : c.current ? <Clock size={12} /> : null}{c.role}{i < task.chain.length - 1 && <span style={{ color: T.faint, marginLeft: 2 }}>›</span>}
+            </span>
+          ))}
+        </div>
+      )}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 12 }}>
+        {isHidden ? (
+          <span style={{ fontSize: 12.5, color: T.wait, fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 5 }}><Lock size={13} /> Раскроется при старте</span>
+        ) : (
+          <span style={{ fontSize: 12.5, color: T.faint }}>{task.order ? task.order : task.assignee === "pool" ? "Свободная · пул ролей" : "\u00A0"}</span>
+        )}
+        <DeadlineChip deadline={task.deadline} />
+      </div>
+    </button>
+  );
+}
+
+// ---- Детали задачи ------------------------------------------
+function TaskDetail({ task, onBack, onStart, onTake, onScan, onPhoto, onComplete, openScanner, toast }) {
+  const meta = TYPE[task.type]; const Icon = meta.Icon;
+  const revealed = task.status !== "hidden";
+  const subject = revealed ? (task.hidden && task.hiddenSubject ? task.hiddenSubject : task.subject) : "Плановая проверка";
+  const canScan = task.status === "in_progress" && task.progress && task.type !== "checklist";
+  return (
+    <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+      <div style={{ background: T.header, padding: "14px 16px 18px", color: T.headerText }}>
+        <button onClick={onBack} style={{ display: "inline-flex", alignItems: "center", gap: 4, cursor: "pointer", background: "transparent", border: "none", color: T.headerMuted, fontSize: 14, marginBottom: 12, padding: 0 }}><ChevronLeft size={18} /> Мои задачи</button>
+        <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+          <div style={{ width: 46, height: 46, borderRadius: 12, background: "rgba(255,255,255,.12)", display: "grid", placeItems: "center" }}><Icon size={24} color="#fff" strokeWidth={2} /></div>
+          <div><div style={{ fontSize: 12, fontWeight: 800, letterSpacing: 0.6, textTransform: "uppercase", color: T.headerMuted }}>{meta.label}</div><div style={{ fontSize: 18, fontWeight: 700 }}>{subject}</div></div>
+        </div>
+      </div>
+      <div style={{ flex: 1, overflowY: "auto", padding: 16, background: T.bg }}>
+        <div style={{ background: T.card, border: `1px solid ${T.border}`, borderRadius: 14, padding: 4, marginBottom: 14 }}>
+          <MetaRow label="Источник" value={task.source} />
+          <MetaRow label="Местоположение" value={revealed ? task.location : "Скрыто до старта"} />
+          {task.order && <MetaRow label="Основание" value={task.order} />}
+          <MetaRow label="Дедлайн" value={<DeadlineChip deadline={task.deadline} />} />
+          {task.blind && <MetaRow label="Режим" value="Слепой счёт · остаток скрыт" />}
+          {task.excise && <MetaRow label="Акциз" value="Сверка акцизных марок" />}
+          {task.requiresPhoto && (
+            <MetaRow label="Фотоотчёт" value={<span style={{ color: task.photoAttached ? T.done : T.warn, fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 5 }}>{task.photoAttached ? <><Check size={14} strokeWidth={3} /> Прикреплён</> : <><Camera size={14} /> Обязателен</>}</span>} />
+          )}
+        </div>
+        {!revealed && (
+          <div style={{ background: T.waitBg, border: `1px dashed ${T.wait}`, borderRadius: 14, padding: 16, marginBottom: 14, textAlign: "center" }}>
+            <Lock size={26} color={T.wait} /><div style={{ fontSize: 15, fontWeight: 700, color: T.ink, marginTop: 8 }}>Закрытая задача</div>
+            <div style={{ fontSize: 13.5, color: T.muted, marginTop: 4, lineHeight: 1.4 }}>Содержание откроется только после «Начать» — чтобы счётчик не готовился заранее.</div>
+          </div>
+        )}
+        {revealed && task.steps.length > 0 && (
+          <><SectionLabel>Шаги</SectionLabel>
+            <div style={{ background: T.card, border: `1px solid ${T.border}`, borderRadius: 14, padding: 6, marginBottom: 14 }}>
+              {task.steps.map((s, i) => (
+                <div key={i} style={{ display: "flex", gap: 12, padding: "10px", borderBottom: i < task.steps.length - 1 ? `1px solid ${T.border}` : "none" }}>
+                  <div style={{ width: 24, height: 24, borderRadius: 20, background: meta.bg, color: meta.color, fontSize: 13, fontWeight: 800, display: "grid", placeItems: "center", flexShrink: 0 }}>{i + 1}</div>
+                  <div style={{ fontSize: 14.5, color: T.ink, lineHeight: 1.35 }}>{s}</div>
+                </div>
+              ))}
+            </div></>
+        )}
+        {task.status === "waiting" && task.chain && (
+          <><SectionLabel>Согласование</SectionLabel>
+            <div style={{ background: T.card, border: `1px solid ${T.border}`, borderRadius: 14, padding: 6, marginBottom: 14 }}>
+              {task.chain.map((c, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "11px 10px", borderBottom: i < task.chain.length - 1 ? `1px solid ${T.border}` : "none" }}>
+                  <div style={{ width: 24, height: 24, borderRadius: 20, flexShrink: 0, display: "grid", placeItems: "center", background: c.done ? T.doneBg : c.current ? T.warnBg : "#F1F4F4", color: c.done ? T.done : c.current ? T.warn : T.faint }}>{c.done ? <Check size={14} strokeWidth={3} /> : c.current ? <Clock size={13} /> : <span style={{ fontSize: 12 }}>{i + 1}</span>}</div>
+                  <div style={{ fontSize: 14.5, color: c.current ? T.ink : T.muted, fontWeight: c.current ? 700 : 500 }}>{c.role}</div>
+                  {c.current && <span style={{ marginLeft: "auto", fontSize: 12.5, color: T.warn, fontWeight: 700 }}>ожидает</span>}
+                </div>
+              ))}
+            </div></>
+        )}
+        {canScan && (<><SectionLabel>{task.blind ? "Счёт (вслепую)" : "Счёт позиций"}</SectionLabel>
+          <CountPanel done={task.progress.done} total={task.progress.total} blind={task.blind} title={task.blind ? "Счёт (вслепую)" : "Счёт позиций"} openScanner={openScanner} onAdd={onScan} /></>)}
+      </div>
+      <div style={{ padding: 14, background: T.card, borderTop: `1px solid ${T.border}` }}>
+        {(task.status === "new" || task.status === "hidden") && <ActionButton onClick={onStart} icon={<Play size={20} />}>{task.status === "hidden" ? "Начать (раскрыть)" : "Начать"}</ActionButton>}
+        {task.assignee === "pool" && task.status === "new" && <ActionButton onClick={onTake} icon={<Plus size={20} />} variant="ghost">Взять в работу</ActionButton>}
+        {task.status === "in_progress" && (<>
+          {task.requiresPhoto && !task.photoAttached && <ActionButton onClick={onPhoto} icon={<Camera size={20} />} variant="warn">Сделать фото результата</ActionButton>}
+          <ActionButton onClick={() => { if (task.requiresPhoto && !task.photoAttached) { toast("Сначала прикрепите фото результата"); return; } onComplete(); }} icon={<CircleCheck size={20} />}>Завершить</ActionButton>
+        </>)}
+        {task.status === "waiting" && <ActionButton onClick={() => toast("Напоминание отправлено администратору")} icon={<Clock size={20} />} variant="ghost">Напомнить о согласовании</ActionButton>}
+        {task.status === "done" && <div style={{ textAlign: "center", color: T.done, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, padding: 6 }}><CircleCheck size={20} /> Задача выполнена</div>}
+      </div>
+    </div>
+  );
+}
+
+function SectionLabel({ children }) { return <div style={{ fontSize: 13, fontWeight: 800, letterSpacing: 0.5, textTransform: "uppercase", color: T.faint, margin: "4px 2px 10px" }}>{children}</div>; }
+function MetaRow({ label, value }) {
+  return <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, padding: "10px 12px", borderBottom: `1px solid ${T.border}` }}><span style={{ fontSize: 13.5, color: T.muted }}>{label}</span><span style={{ fontSize: 14, color: T.ink, fontWeight: 600, textAlign: "right" }}>{value}</span></div>;
+}
+function ActionButton({ children, onClick, icon, variant, disabled }) {
+  const styles = { default: { background: T.primary, color: "#fff", border: "none" }, ghost: { background: "#F5F7F7", color: T.ink, border: `1px solid ${T.border}` }, warn: { background: T.warnBg, color: T.warn, border: `1px solid ${T.warn}` } };
+  const s = disabled ? { background: "#CFE0E0", color: "#fff", border: "none" } : (styles[variant] || styles.default);
+  return <button onClick={disabled ? undefined : onClick} style={{ width: "100%", padding: "15px", borderRadius: 12, cursor: disabled ? "default" : "pointer", fontSize: 16, fontWeight: 700, marginBottom: 8, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, ...s }}>{icon} {children}</button>;
+}
+
+// ============================================================
+//  ПОТОК ОПЕРАЦИИ
+// ============================================================
+const TONE = { done: [T.done, T.doneBg], urgent: [T.urgent, T.urgentBg], info: [T.info, T.infoBg], violet: [T.violet, T.violetBg] };
+
+function OperationFlow({ op, onExit, openScanner, toast }) {
+  const hasVariants = !!op.variants;
+  const [variantKey, setVariantKey] = useState(hasVariants ? null : "_");
+  const variant = hasVariants ? op.variants.find((v) => v.key === variantKey) : null;
+  const steps = hasVariants ? (variant ? variant.steps : []) : op.steps;
+  const [idx, setIdx] = useState(0);
+  const [choice, setChoice] = useState({});
+  const [checks, setChecks] = useState({});
+  const [lines, setLines] = useState({});
+  const [routes, setRoutes] = useState({});
+  const [photos, setPhotos] = useState({});
+  const [badges, setBadges] = useState({});
+
+  if (hasVariants && !variantKey) {
+    return (
+      <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+        <FlowHeader op={op} sub="Выберите тип операции" onExit={onExit} />
+        <div style={{ flex: 1, overflowY: "auto", padding: 16, background: T.bg }}>
+          {op.variants.map((v) => (
+            <button key={v.key} onClick={() => { setVariantKey(v.key); setIdx(0); }} style={{ display: "block", width: "100%", textAlign: "left", cursor: "pointer", background: T.card, border: `1px solid ${T.border}`, borderRadius: 16, padding: 16, marginBottom: 10 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <div style={{ flex: 1 }}><div style={{ fontSize: 16, fontWeight: 700, color: T.ink }}>{v.label}</div><div style={{ fontSize: 13, color: T.muted, marginTop: 3, lineHeight: 1.35 }}>{v.desc}</div></div>
+                <ChevronRight size={20} color={T.faint} />
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  const step = steps[idx];
+  const isSummary = step.type === "summary";
+  const ready = () => {
+    if (step.type === "confirm") return step.items.every((it, i) => it.optional || checks[`${idx}-${i}`]);
+    if (step.type === "choice") return choice[idx] != null;
+    if (step.type === "route") return routes[idx] != null;
+    if (step.type === "photo") return !!photos[idx];
+    if (step.type === "badge") return !!badges[idx];
+    return true;
+  };
+  const goBack = () => { if (idx > 0) setIdx(idx - 1); else if (hasVariants) setVariantKey(null); else onExit(); };
+  const goNext = () => { if (ready() && idx < steps.length - 1) setIdx(idx + 1); };
+  const finish = () => { toast(`${op.label}: ${step.action}`); onExit(); };
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+      <FlowHeader op={op} sub={variant ? variant.label : null} progress={`Шаг ${idx + 1} из ${steps.length}`} onExit={onExit} />
+      <div style={{ flex: 1, overflowY: "auto", padding: 16, background: T.bg }}>
+        <div style={{ fontSize: 19, fontWeight: 700, color: T.ink, marginBottom: step.hint ? 4 : 14 }}>{step.title}</div>
+        {step.hint && <div style={{ fontSize: 13.5, color: T.muted, marginBottom: 14, lineHeight: 1.4 }}>{step.hint}</div>}
+
+        {step.type === "choice" && step.options.map((o, i) => {
+          const on = choice[idx] === i;
+          return (
+            <button key={i} onClick={() => setChoice({ ...choice, [idx]: i })} style={{ display: "block", width: "100%", textAlign: "left", cursor: "pointer", marginBottom: 10, background: on ? "#E9F4F4" : T.card, border: `2px solid ${on ? T.primary : T.border}`, borderRadius: 14, padding: 14 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <div style={{ width: 22, height: 22, borderRadius: 22, border: `2px solid ${on ? T.primary : T.faint}`, display: "grid", placeItems: "center", flexShrink: 0 }}>{on && <div style={{ width: 11, height: 11, borderRadius: 11, background: T.primary }} />}</div>
+                <div><div style={{ fontSize: 15.5, fontWeight: 700, color: T.ink }}>{o.label}</div>{o.desc && <div style={{ fontSize: 13, color: T.muted, marginTop: 2 }}>{o.desc}</div>}</div>
+              </div>
+            </button>
+          );
+        })}
+
+        {step.type === "confirm" && step.items.map((it, i) => {
+          const on = !!checks[`${idx}-${i}`];
+          return (
+            <button key={i} onClick={() => setChecks({ ...checks, [`${idx}-${i}`]: !on })} style={{ display: "flex", alignItems: "center", gap: 12, width: "100%", textAlign: "left", cursor: "pointer", marginBottom: 10, background: T.card, border: `1px solid ${T.border}`, borderRadius: 14, padding: 14 }}>
+              {on ? <CheckSquare size={24} color={T.primary} /> : <Square size={24} color={T.faint} />}
+              <div style={{ fontSize: 15, fontWeight: 600, color: T.ink }}>{it.label} {it.optional && <span style={{ color: T.faint, fontWeight: 500 }}>· если применимо</span>}</div>
+            </button>
+          );
+        })}
+
+        {step.type === "count" && (
+          <CountPanel done={(lines[idx] || []).length} total={step.target} blind={step.blind} note={step.note} title={step.title} openScanner={openScanner}
+            onAdd={(item) => setLines((prev) => { const cur = prev[idx] || []; if (cur.length >= step.target) return prev; return { ...prev, [idx]: [...cur, item || { name: "Позиция", qty: 1 }] }; })} />
+        )}
+
+        {step.type === "route" && step.options.map((o, i) => {
+          const on = routes[idx] === i; const [c, bg] = TONE[o.tone] || [T.ink, "#F1F4F4"];
+          return (
+            <button key={i} onClick={() => setRoutes({ ...routes, [idx]: i })} style={{ display: "block", width: "100%", textAlign: "left", cursor: "pointer", marginBottom: 10, background: on ? bg : T.card, border: `2px solid ${on ? c : T.border}`, borderRadius: 14, padding: 14 }}>
+              <div style={{ fontSize: 15.5, fontWeight: 700, color: on ? c : T.ink }}>{o.label}</div>{o.desc && <div style={{ fontSize: 13, color: T.muted, marginTop: 2 }}>{o.desc}</div>}
+            </button>
+          );
+        })}
+
+        {step.type === "photo" && (
+          <div style={{ background: T.card, border: `1px solid ${T.border}`, borderRadius: 14, padding: 20, textAlign: "center" }}>
+            {photos[idx] ? (
+              <><div style={{ width: 64, height: 64, borderRadius: 12, background: T.doneBg, display: "grid", placeItems: "center", margin: "0 auto 12px" }}><Check size={30} color={T.done} strokeWidth={2.5} /></div><div style={{ fontSize: 15, fontWeight: 700, color: T.done }}>Фото прикреплено</div></>
+            ) : (
+              <><button onClick={() => setPhotos({ ...photos, [idx]: true })} style={{ width: 64, height: 64, borderRadius: 12, background: T.warnBg, border: "none", cursor: "pointer", display: "grid", placeItems: "center", margin: "0 auto 12px" }}><Camera size={30} color={T.warn} /></button><div style={{ fontSize: 15, fontWeight: 700, color: T.ink }}>Сделать фото</div><div style={{ fontSize: 12.5, color: T.faint, marginTop: 4 }}>Макет: тап имитирует съёмку</div></>
+            )}
+            {step.note && <div style={{ fontSize: 12.5, color: T.muted, marginTop: 14, lineHeight: 1.4, textAlign: "left" }}>{step.note}</div>}
+          </div>
+        )}
+
+        {step.type === "badge" && (
+          <div>
+            {step.context && (
+              <div style={{ background: T.card, border: `1px solid ${T.border}`, borderRadius: 14, padding: 6, marginBottom: 12 }}>
+                {step.context.map((c, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px", borderBottom: i < step.context.length - 1 ? `1px solid ${T.border}` : "none" }}>
+                    <Check size={18} color={T.done} strokeWidth={2.6} /><span style={{ fontSize: 14.5, color: T.ink }}>{c}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+            {badges[idx] ? (
+              <div style={{ background: T.doneBg, border: `1px solid ${T.done}`, borderRadius: 14, padding: 16, display: "flex", alignItems: "center", gap: 12 }}>
+                <ShieldCheck size={30} color={T.done} />
+                <div><div style={{ fontSize: 15, fontWeight: 700, color: T.done }}>Подтверждено</div><div style={{ fontSize: 13.5, color: T.ink, marginTop: 2 }}>{badges[idx].name} · {step.role} · {badges[idx].time}</div></div>
+              </div>
+            ) : (
+              <button onClick={() => setBadges({ ...badges, [idx]: { name: "Э. Осмонов", time: "12:49" } })} style={{ width: "100%", padding: 18, borderRadius: 14, border: `2px dashed ${T.primary}`, background: "#E9F4F4", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
+                <QrCode size={40} color={T.primary} /><div style={{ fontSize: 16, fontWeight: 700, color: T.primary }}>Сканировать QR-бейдж СБ</div>
+                <div style={{ fontSize: 12.5, color: T.muted }}>Макет: тап имитирует скан бейджа</div>
+              </button>
+            )}
+            {step.note && <div style={{ fontSize: 12.5, color: T.muted, marginTop: 12, lineHeight: 1.45 }}>{step.note}</div>}
+          </div>
+        )}
+
+        {step.type === "approval" && (
+          <div style={{ background: T.card, border: `1px solid ${T.border}`, borderRadius: 14, padding: 6 }}>
+            {step.chain.map((role, i) => (
+              <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 10px", borderBottom: i < step.chain.length - 1 ? `1px solid ${T.border}` : "none" }}>
+                <div style={{ width: 24, height: 24, borderRadius: 20, background: "#F1F4F4", color: T.muted, fontSize: 12, fontWeight: 800, display: "grid", placeItems: "center" }}>{i + 1}</div>
+                <div style={{ fontSize: 15, color: T.ink, fontWeight: 600 }}>{role}</div>
+                {i < step.chain.length - 1 && <ChevronRight size={16} color={T.faint} style={{ marginLeft: "auto" }} />}
+              </div>
+            ))}
+            <div style={{ fontSize: 12.5, color: T.muted, padding: "10px", lineHeight: 1.4 }}>Параллельно, с дедлайнами и эскалацией. Бумажную очередь убираем, роли сохраняем.</div>
+          </div>
+        )}
+
+        {isSummary && (
+          <div>
+            {steps.slice(0, idx).map((s, i) => {
+              if (s.type === "count") {
+                const arr = lines[i] || [];
+                return (
+                  <div key={i} style={{ background: T.card, border: `1px solid ${T.border}`, borderRadius: 14, marginBottom: 12, overflow: "hidden" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 14px", borderBottom: `1px solid ${T.border}` }}>
+                      <span style={{ fontSize: 14, fontWeight: 700, color: T.ink }}>{s.title}</span>
+                      <span style={{ fontSize: 13.5, color: T.muted, fontWeight: 600, fontVariantNumeric: "tabular-nums" }}>{arr.length} поз.</span>
+                    </div>
+                    {arr.length === 0 ? (
+                      <div style={{ padding: "12px 14px", fontSize: 13.5, color: T.faint }}>Ничего не добавлено</div>
+                    ) : arr.map((it, j) => (
+                      <div key={j} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, padding: "10px 14px", borderBottom: j < arr.length - 1 ? `1px solid ${T.border}` : "none" }}>
+                        <span style={{ fontSize: 14, color: T.ink }}>{it.name}</span>
+                        <span style={{ fontSize: 14, fontWeight: 700, color: T.primary, fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap" }}>{it.kg ? `${it.kg} кг` : `× ${it.qty}`}</span>
+                      </div>
+                    ))}
+                  </div>
+                );
+              }
+              let val = null;
+              if (s.type === "choice" && choice[i] != null) val = s.options[choice[i]].label;
+              else if (s.type === "route" && routes[i] != null) val = s.options[routes[i]].label;
+              else if (s.type === "photo") val = photos[i] ? "прикреплено" : "—";
+              else if (s.type === "badge") val = badges[i] ? `подтвердил ${badges[i].name}` : "—";
+              else if (s.type === "confirm") val = "подтверждено";
+              else if (s.type === "approval") val = "цепочка задана";
+              if (val == null) return null;
+              return (
+                <div key={i} style={{ background: T.card, border: `1px solid ${T.border}`, borderRadius: 14, padding: "12px 14px", marginBottom: 12, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
+                  <span style={{ fontSize: 13.5, color: T.muted }}>{s.title}</span>
+                  <span style={{ fontSize: 14, color: T.ink, fontWeight: 600, textAlign: "right" }}>{val}</span>
+                </div>
+              );
+            })}
+            {step.note && <div style={{ fontSize: 13, color: T.muted, background: "#F1F4F4", borderRadius: 12, padding: "12px 14px", lineHeight: 1.45 }}>{step.note}</div>}
+          </div>
+        )}
+      </div>
+
+      <div style={{ padding: 14, background: T.card, borderTop: `1px solid ${T.border}` }}>
+        {isSummary ? (
+          <ActionButton onClick={finish} icon={<CircleCheck size={20} />}>{step.action}</ActionButton>
+        ) : (
+          <div style={{ display: "flex", gap: 10 }}>
+            <button onClick={goBack} style={{ padding: "15px 20px", borderRadius: 12, border: `1px solid ${T.border}`, background: "#F5F7F7", cursor: "pointer", fontSize: 15, fontWeight: 700, color: T.ink }}>Назад</button>
+            <button onClick={goNext} disabled={!ready()} style={{ flex: 1, padding: "15px", borderRadius: 12, border: "none", cursor: ready() ? "pointer" : "default", background: ready() ? T.primary : "#CFE0E0", color: "#fff", fontSize: 16, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>Далее <ChevronRight size={20} /></button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function FlowHeader({ op, sub, progress, onExit }) {
+  const Icon = op.Icon;
+  return (
+    <div style={{ background: T.header, padding: "14px 16px 16px", color: T.headerText }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
+        <span style={{ fontSize: 12.5, color: T.headerMuted, fontWeight: 600 }}>Свободный запуск операции</span>
+        <button onClick={onExit} style={{ background: "transparent", border: "none", cursor: "pointer", color: T.headerMuted, padding: 0 }}><X size={22} /></button>
+      </div>
+      <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+        <div style={{ width: 46, height: 46, borderRadius: 12, background: "rgba(255,255,255,.12)", display: "grid", placeItems: "center" }}><Icon size={24} color="#fff" strokeWidth={2} /></div>
+        <div><div style={{ fontSize: 18, fontWeight: 700 }}>{op.label}</div><div style={{ fontSize: 13, color: T.headerMuted }}>{sub || "\u00A0"}{progress ? ` · ${progress}` : ""}</div></div>
+      </div>
+    </div>
+  );
+}
+
+// ---- «Операции» ---------------------------------------------
+function OperationsScreen({ onOpen, toast }) {
+  const ops = [
+    { key: "receiving", label: "Приёмка", Icon: Truck }, { key: "transfer", label: "Перемещение", Icon: Boxes },
+    { key: "count", label: "Инвентаризация", Icon: ClipboardList }, { key: "writeoff", label: "Списание", Icon: Trash2 },
+    { key: "return", label: "Возврат", Icon: Undo2 }, { key: "pricing", label: "Ценники", Icon: Tag },
+    { key: "order", label: "Заказ товара", Icon: ShoppingCart, wave: "R2" }, { key: "coupon", label: "Купон", Icon: Ticket, wave: "R2" },
+  ];
+  return (
+    <div style={{ padding: 16 }}>
+      <div style={{ fontSize: 14, color: T.muted, marginBottom: 16, lineHeight: 1.45 }}>Запуск операции вручную — без задачи от системы. Многие операции (приход поставщика, разовый пересчёт, списание) так и начинаются: с этого экрана.</div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+        {ops.map((o) => {
+          const Ic = o.Icon; const locked = !!o.wave;
+          return (
+            <button key={o.key} disabled={locked} onClick={() => locked ? toast(`«${o.label}» — волна ${o.wave}`) : onOpen(o.key)} style={{ background: T.card, border: `1px solid ${T.border}`, borderRadius: 16, padding: "20px 12px", cursor: locked ? "default" : "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 10, opacity: locked ? 0.5 : 1, position: "relative" }}>
+              {o.wave && <span style={{ position: "absolute", top: 8, right: 8, fontSize: 10, fontWeight: 800, color: T.wait, background: T.waitBg, padding: "2px 6px", borderRadius: 6 }}>{o.wave}</span>}
+              <Ic size={28} color={T.primary} strokeWidth={2} /><span style={{ fontSize: 14, fontWeight: 700, color: T.ink }}>{o.label}</span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ---- «Смена» -------------------------------------------------
+function ShiftScreen({ online, queue, toast }) {
+  return (
+    <div style={{ padding: 16 }}>
+      <div style={{ background: T.card, border: `1px solid ${T.border}`, borderRadius: 16, padding: 16, marginBottom: 12, display: "flex", gap: 14, alignItems: "center" }}>
+        <div style={{ width: 52, height: 52, borderRadius: 26, background: T.primary, display: "grid", placeItems: "center", color: "#fff", fontSize: 20, fontWeight: 800 }}>А</div>
+        <div><div style={{ fontSize: 17, fontWeight: 700, color: T.ink }}>Айгүль С.</div><div style={{ fontSize: 13.5, color: T.muted }}>Операционист · Маркет №14</div><div style={{ fontSize: 13, color: T.faint, marginTop: 2 }}>Смена 08:00–17:00</div></div>
+      </div>
+      <div style={{ background: T.card, border: `1px solid ${T.border}`, borderRadius: 16, padding: 4, marginBottom: 12 }}>
+        <MetaRow label="Устройство" value="TSD-014-03" /><MetaRow label="Синхронизация" value={online ? "В сети" : `Офлайн · ${queue} в очереди`} /><MetaRow label="Батарея" value="78%" /><MetaRow label="Версия" value="СмартТСД 0.9 (макет)" />
+      </div>
+      <div style={{ background: T.card, border: `1px solid ${T.border}`, borderRadius: 16, padding: 4, marginBottom: 16 }}>
+        <MetaRow label="Открытие смены" value={<span style={{ color: T.done, fontWeight: 700 }}>Готово 09:12</span>} /><MetaRow label="Закрытие смены" value={<span style={{ color: T.faint }}>после 17:00</span>} />
+      </div>
+      <button onClick={() => toast("Передача смены устройства")} style={{ width: "100%", padding: 15, borderRadius: 12, border: `1px solid ${T.border}`, background: "#F5F7F7", cursor: "pointer", fontSize: 15, fontWeight: 700, color: T.ink, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginBottom: 8 }}><ArrowLeftRight size={19} /> Передать смену устройства</button>
+      <button onClick={() => toast("Выход из смены")} style={{ width: "100%", padding: 15, borderRadius: 12, border: "none", background: T.urgentBg, cursor: "pointer", fontSize: 15, fontWeight: 700, color: T.urgent, display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}><LogOut size={19} /> Выйти</button>
+    </div>
+  );
+}
+
+// ---- Нижняя навигация ---------------------------------------
+function BottomNav({ active, setActive, taskCount }) {
+  const items = [{ key: "tasks", label: "Задачи", Icon: ListChecks, badge: taskCount }, { key: "ops", label: "Операции", Icon: PackageCheck }, { key: "shift", label: "Смена", Icon: User }];
+  return (
+    <div style={{ display: "flex", background: T.card, borderTop: `1px solid ${T.border}` }}>
+      {items.map((it) => {
+        const Ic = it.Icon; const on = active === it.key;
+        return (
+          <button key={it.key} onClick={() => setActive(it.key)} style={{ flex: 1, padding: "9px 0 11px", background: "transparent", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 3, color: on ? T.primary : T.faint, position: "relative" }}>
+            <div style={{ position: "relative" }}><Ic size={23} strokeWidth={on ? 2.4 : 2} />{it.badge > 0 && <span style={{ position: "absolute", top: -6, right: -10, background: T.urgent, color: "#fff", fontSize: 10.5, fontWeight: 800, minWidth: 17, height: 17, borderRadius: 9, display: "grid", placeItems: "center", padding: "0 3px" }}>{it.badge}</span>}</div>
+            <span style={{ fontSize: 11.5, fontWeight: on ? 700 : 600 }}>{it.label}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+// ---- Главный экран задач -------------------------------------
+function TasksScreen({ tasks, online, queue, toggleSync, onOpen }) {
+  const [tab, setTab] = useState("me");
+  const [sort, setSort] = useState("priority");
+  const tabs = [{ key: "me", label: "Мои" }, { key: "pool", label: "Свободные" }, { key: "done", label: "Готово" }];
+  const filtered = useMemo(() => {
+    let list = tasks.filter((t) => { if (tab === "done") return t.status === "done"; if (tab === "pool") return t.assignee === "pool" && t.status !== "done"; return t.assignee === "me" && t.status !== "done"; });
+    const pRank = { urgent: 0, normal: 1, low: 2 }; const dRank = { overdue: 0, now: 1, soon: 2, ok: 3, done: 4 };
+    return [...list].sort((a, b) => sort === "priority" ? pRank[a.priority] - pRank[b.priority] || dRank[a.deadline.state] - dRank[b.deadline.state] : dRank[a.deadline.state] - dRank[b.deadline.state]);
+  }, [tasks, tab, sort]);
+  const myActive = tasks.filter((t) => t.assignee === "me" && t.status !== "done");
+  const urgentCount = myActive.filter((t) => t.priority === "urgent").length;
+  const overdueCount = myActive.filter((t) => t.deadline.state === "overdue").length;
+  return (
+    <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+      <div style={{ background: T.header, color: T.headerText, padding: "12px 16px 14px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+          <div><div style={{ fontSize: 17, fontWeight: 700 }}>Мои задачи</div><div style={{ fontSize: 13, color: T.headerMuted, marginTop: 1 }}>Айгүль · Операционист · Маркет №14</div></div>
+          <button onClick={toggleSync} style={{ display: "inline-flex", alignItems: "center", gap: 6, cursor: "pointer", background: online ? "rgba(255,255,255,.10)" : T.warnBg, color: online ? T.headerText : T.warn, border: "none", fontSize: 12, fontWeight: 700, padding: "7px 11px", borderRadius: 20 }}>
+            {online ? <Wifi size={14} /> : <WifiOff size={14} />}{online ? "Синхр. 12:44" : `Офлайн · ${queue}`}{online && <RefreshCw size={12} />}
+          </button>
+        </div>
+        <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
+          <SummaryStat n={myActive.length} label="активных" /><SummaryStat n={urgentCount} label="срочных" tone="urgent" /><SummaryStat n={overdueCount} label="просрочено" tone="urgent" />
+        </div>
+      </div>
+      <div style={{ background: T.card, borderBottom: `1px solid ${T.border}`, padding: "10px 12px" }}>
+        <div style={{ display: "flex", gap: 6 }}>
+          {tabs.map((tb) => {
+            const on = tab === tb.key;
+            const cnt = tb.key === "done" ? tasks.filter((t) => t.status === "done").length : tb.key === "pool" ? tasks.filter((t) => t.assignee === "pool" && t.status !== "done").length : myActive.length;
+            return <button key={tb.key} onClick={() => setTab(tb.key)} style={{ flex: 1, padding: "9px 6px", borderRadius: 10, cursor: "pointer", fontSize: 13.5, fontWeight: 700, border: "none", background: on ? T.primary : "#F1F4F4", color: on ? "#fff" : T.muted }}>{tb.label} <span style={{ opacity: 0.8 }}>{cnt}</span></button>;
+          })}
+        </div>
+        {tab !== "done" && <button onClick={() => setSort((s) => (s === "priority" ? "deadline" : "priority"))} style={{ marginTop: 8, background: "transparent", border: "none", cursor: "pointer", fontSize: 12.5, color: T.muted, fontWeight: 600, padding: 2 }}>Сортировка: {sort === "priority" ? "по приоритету" : "по дедлайну"} ⇅</button>}
+      </div>
+      <div style={{ flex: 1, overflowY: "auto", padding: 12, background: T.bg }}>
+        {filtered.length === 0 ? (
+          <div style={{ textAlign: "center", color: T.faint, padding: "48px 20px" }}><CircleCheck size={40} color={T.faint} /><div style={{ fontSize: 15, fontWeight: 700, color: T.muted, marginTop: 10 }}>Задач нет</div><div style={{ fontSize: 13.5, marginTop: 4 }}>Свободные задачи можно взять во вкладке «Свободные».</div></div>
+        ) : filtered.map((t) => <TaskCard key={t.id} task={t} onOpen={onOpen} />)}
+      </div>
+    </div>
+  );
+}
+function SummaryStat({ n, label, tone }) {
+  return <div style={{ flex: 1, background: "rgba(255,255,255,.08)", borderRadius: 12, padding: "9px 10px" }}><div style={{ fontSize: 22, fontWeight: 800, fontVariantNumeric: "tabular-nums", color: tone === "urgent" && n > 0 ? "#FF9A9A" : T.headerText }}>{n}</div><div style={{ fontSize: 11.5, color: T.headerMuted }}>{label}</div></div>;
+}
+
+// ---- Корневой компонент -------------------------------------
+function App() {
+  const [vw, setVw] = React.useState(typeof window !== "undefined" ? window.innerWidth : 390);
+  React.useEffect(() => { const h = () => setVw(window.innerWidth); window.addEventListener("resize", h); return () => window.removeEventListener("resize", h); }, []);
+  const small = vw <= 500;
+
+  const [tasks, setTasks] = useState(INITIAL_TASKS);
+  const [nav, setNav] = useState("tasks");
+  const [selectedId, setSelectedId] = useState(null);
+  const [activeOp, setActiveOp] = useState(null);
+  const [online, setOnline] = useState(false);
+  const [queue, setQueue] = useState(3);
+  const [toastMsg, setToastMsg] = useState(null);
+  const [scanCfg, setScanCfg] = useState(null);
+
+  const toast = (m) => { setToastMsg(m); setTimeout(() => setToastMsg(null), 2200); };
+  const selected = tasks.find((t) => t.id === selectedId) || null;
+  const update = (id, patch) => setTasks((ts) => ts.map((t) => (t.id === id ? { ...t, ...patch } : t)));
+  const openScanner = (cfg) => setScanCfg(cfg);
+
+  const toggleSync = () => { if (!online) { setOnline(true); setQueue(0); toast("Синхронизация выполнена"); } else { setOnline(false); setQueue(3); toast("Работаем офлайн — операции в очереди"); } };
+  const startTask = (t) => update(t.id, { status: "in_progress", location: t.hidden && t.hiddenSubject ? "Кассовая зона" : t.location });
+  const takeTask = (t) => { update(t.id, { assignee: "me" }); toast("Задача взята в работу"); };
+  const scanTask = (t) => {
+    setTasks((ts) => ts.map((x) => (x.id === t.id && x.progress && x.progress.done < x.progress.total ? { ...x, progress: { ...x.progress, done: x.progress.done + 1 } } : x)));
+    if (!online) setQueue((q) => q + 1);
+  };
+  const complete = (t) => { update(t.id, { status: "done", deadline: { state: "done", label: "Готово только что" } }); setSelectedId(null); toast("Задача завершена"); };
+  const attachPhoto = (t) => { update(t.id, { photoAttached: true }); toast("Фото прикреплено"); };
+
+  const cur = selected;
+  const op = activeOp ? OP_SPECS[activeOp] : null;
+
+  return (
+    <div style={{ minHeight: "100vh", background: "#D7DDDE", display: "grid", placeItems: "center", padding: small ? 0 : 16, fontFamily: "-apple-system, 'Segoe UI', Roboto, sans-serif" }}>
+      <div style={small ? { width: "100vw", height: "100dvh", background: "#000", borderRadius: 0, padding: 0 } : { width: 390, height: 820, maxHeight: "94vh", background: "#000", borderRadius: 40, padding: 9, boxShadow: "0 20px 60px rgba(0,0,0,.35)" }}>
+        <div style={{ width: "100%", height: "100%", background: T.bg, borderRadius: small ? 0 : 32, overflow: "hidden", display: "flex", flexDirection: "column", position: "relative" }}>
+          <div style={{ background: T.header, color: T.headerText, display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 18px 2px", fontSize: 12.5, fontWeight: 600 }}>
+            <span style={{ fontVariantNumeric: "tabular-nums" }}>12:47</span>
+            <span style={{ display: "inline-flex", gap: 6, alignItems: "center" }}><Signal size={13} /> {online ? <Wifi size={13} /> : <WifiOff size={13} />} <Battery size={15} /> 78%</span>
+          </div>
+          <div style={{ flex: 1, overflow: "hidden", display: "flex", flexDirection: "column" }}>
+            {op ? (
+              <OperationFlow op={op} onExit={() => setActiveOp(null)} openScanner={openScanner} toast={toast} />
+            ) : cur ? (
+              <TaskDetail task={cur} onBack={() => setSelectedId(null)} onStart={() => startTask(cur)} onTake={() => takeTask(cur)} onScan={() => scanTask(cur)} onPhoto={() => attachPhoto(cur)} onComplete={() => complete(cur)} openScanner={openScanner} toast={toast} />
+            ) : nav === "tasks" ? (
+              <TasksScreen tasks={tasks} online={online} queue={queue} toggleSync={toggleSync} onOpen={setSelectedId} />
+            ) : nav === "ops" ? (
+              <div style={{ flex: 1, overflowY: "auto" }}><ScreenTitle>Операции</ScreenTitle><OperationsScreen onOpen={setActiveOp} toast={toast} /></div>
+            ) : (
+              <div style={{ flex: 1, overflowY: "auto" }}><ScreenTitle>Смена</ScreenTitle><ShiftScreen online={online} queue={queue} toast={toast} /></div>
+            )}
+          </div>
+          {!cur && !op && <BottomNav active={nav} setActive={setNav} taskCount={tasks.filter((t) => t.assignee === "me" && t.status !== "done").length} />}
+          {toastMsg && <div style={{ position: "absolute", bottom: 78, left: 16, right: 16, background: T.ink, color: "#fff", fontSize: 13.5, fontWeight: 600, padding: "12px 14px", borderRadius: 12, textAlign: "center", boxShadow: "0 6px 20px rgba(0,0,0,.3)", zIndex: 40 }}>{toastMsg}</div>}
+          {scanCfg && <ScannerModal title={scanCfg.title} initialView={scanCfg.initialView} onAdd={scanCfg.onAdd} onClose={() => setScanCfg(null)} />}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ScreenTitle({ children }) { return <div style={{ background: T.header, color: T.headerText, padding: "14px 16px", fontSize: 17, fontWeight: 700 }}>{children}</div>; }
+
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+
+</script>
+</body>
+</html>
