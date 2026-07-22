@@ -1,0 +1,3926 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Смарт ТСД — макет</title>
+<style>html,body,#root{height:100%;margin:0}body{background:#D7DDDE;-webkit-tap-highlight-color:transparent}*{box-sizing:border-box}</style>
+</head>
+<body>
+<div id="root"></div>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script>
+import { jsxDEV as _jsxDEV, Fragment as _Fragment } from "react/jsx-dev-runtime";
+var useState = React.useState,
+  useMemo = React.useMemo,
+  useEffect = React.useEffect;
+function mkIcon(inner) {
+  return function (p) {
+    p = p || {};
+    return React.createElement("svg", {
+      width: p.size || 24,
+      height: p.size || 24,
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: p.color || "currentColor",
+      strokeWidth: p.strokeWidth || 2,
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+      style: p.style,
+      dangerouslySetInnerHTML: {
+        __html: inner
+      }
+    });
+  };
+}
+const Truck = mkIcon("<path d=\"M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2\" /> <path d=\"M15 18H9\" /> <path d=\"M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14\" /> <circle cx=\"17\" cy=\"18\" r=\"2\" /> <circle cx=\"7\" cy=\"18\" r=\"2\" />");
+const Boxes = mkIcon("<path d=\"M2.97 12.92A2 2 0 0 0 2 14.63v3.24a2 2 0 0 0 .97 1.71l3 1.8a2 2 0 0 0 2.06 0L12 19v-5.5l-5-3-4.03 2.42Z\" /> <path d=\"m7 16.5-4.74-2.85\" /> <path d=\"m7 16.5 5-3\" /> <path d=\"M7 16.5v5.17\" /> <path d=\"M12 13.5V19l3.97 2.38a2 2 0 0 0 2.06 0l3-1.8a2 2 0 0 0 .97-1.71v-3.24a2 2 0 0 0-.97-1.71L17 10.5l-5 3Z\" /> <path d=\"m17 16.5-5-3\" /> <path d=\"m17 16.5 4.74-2.85\" /> <path d=\"M17 16.5v5.17\" /> <path d=\"M7.97 4.42A2 2 0 0 0 7 6.13v4.37l5 3 5-3V6.13a2 2 0 0 0-.97-1.71l-3-1.8a2 2 0 0 0-2.06 0l-3 1.8Z\" /> <path d=\"M12 8 7.26 5.15\" /> <path d=\"m12 8 4.74-2.85\" /> <path d=\"M12 13.5V8\" />");
+const Tag = mkIcon("<path d=\"M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z\" /> <circle cx=\"7.5\" cy=\"7.5\" r=\".5\" fill=\"currentColor\" />");
+const ClipboardList = mkIcon("<rect width=\"8\" height=\"4\" x=\"8\" y=\"2\" rx=\"1\" ry=\"1\" /> <path d=\"M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2\" /> <path d=\"M12 11h4\" /> <path d=\"M12 16h4\" /> <path d=\"M8 11h.01\" /> <path d=\"M8 16h.01\" />");
+const ListChecks = mkIcon("<path d=\"M13 5h8\" /> <path d=\"M13 12h8\" /> <path d=\"M13 19h8\" /> <path d=\"m3 17 2 2 4-4\" /> <path d=\"m3 7 2 2 4-4\" />");
+const Trash2 = mkIcon("<path d=\"M10 11v6\" /> <path d=\"M14 11v6\" /> <path d=\"M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6\" /> <path d=\"M3 6h18\" /> <path d=\"M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2\" />");
+const Undo2 = mkIcon("<path d=\"M9 14 4 9l5-5\" /> <path d=\"M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11\" />");
+const ChevronRight = mkIcon("<path d=\"m9 18 6-6-6-6\" />");
+const ChevronLeft = mkIcon("<path d=\"m15 18-6-6 6-6\" />");
+const Lock = mkIcon("<rect width=\"18\" height=\"11\" x=\"3\" y=\"11\" rx=\"2\" ry=\"2\" /> <path d=\"M7 11V7a5 5 0 0 1 10 0v4\" />");
+const Camera = mkIcon("<path d=\"M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z\" /> <circle cx=\"12\" cy=\"13\" r=\"3\" />");
+const ScanLine = mkIcon("<path d=\"M3 7V5a2 2 0 0 1 2-2h2\" /> <path d=\"M17 3h2a2 2 0 0 1 2 2v2\" /> <path d=\"M21 17v2a2 2 0 0 1-2 2h-2\" /> <path d=\"M7 21H5a2 2 0 0 1-2-2v-2\" /> <path d=\"M7 12h10\" />");
+const Keyboard = mkIcon("<path d=\"M10 8h.01\" /> <path d=\"M12 12h.01\" /> <path d=\"M14 8h.01\" /> <path d=\"M16 12h.01\" /> <path d=\"M18 8h.01\" /> <path d=\"M6 8h.01\" /> <path d=\"M7 16h10\" /> <path d=\"M8 12h.01\" /> <rect width=\"20\" height=\"16\" x=\"2\" y=\"4\" rx=\"2\" />");
+const Wifi = mkIcon("<path d=\"M12 20h.01\" /> <path d=\"M2 8.82a15 15 0 0 1 20 0\" /> <path d=\"M5 12.859a10 10 0 0 1 14 0\" /> <path d=\"M8.5 16.429a5 5 0 0 1 7 0\" />");
+const WifiOff = mkIcon("<path d=\"M12 20h.01\" /> <path d=\"M8.5 16.429a5 5 0 0 1 7 0\" /> <path d=\"M5 12.859a10 10 0 0 1 5.17-2.69\" /> <path d=\"M19 12.859a10 10 0 0 0-2.007-1.523\" /> <path d=\"M2 8.82a15 15 0 0 1 4.177-2.643\" /> <path d=\"M22 8.82a15 15 0 0 0-11.288-3.764\" /> <path d=\"m2 2 20 20\" />");
+const RefreshCw = mkIcon("<path d=\"M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8\" /> <path d=\"M21 3v5h-5\" /> <path d=\"M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16\" /> <path d=\"M8 16H3v5\" />");
+const AlertTriangle = mkIcon("<path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\" /> <path d=\"M12 9v4\" /> <path d=\"M12 17h.01\" />");
+const Check = mkIcon("<path d=\"M20 6 9 17l-5-5\" />");
+const CircleCheck = mkIcon("<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"m9 12 2 2 4-4\" />");
+const Clock = mkIcon("<circle cx=\"12\" cy=\"12\" r=\"10\" /> <path d=\"M12 6v6l4 2\" />");
+const Play = mkIcon("<path d=\"M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z\" />");
+const PackageCheck = mkIcon("<path d=\"M12 22V12\" /> <path d=\"m16 17 2 2 4-4\" /> <path d=\"M21 11.127V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.729l7 4a2 2 0 0 0 2 .001l1.32-.753\" /> <path d=\"M3.29 7 12 12l8.71-5\" /> <path d=\"m7.5 4.27 8.997 5.148\" />");
+const ShoppingCart = mkIcon("<circle cx=\"8\" cy=\"21\" r=\"1\" /> <circle cx=\"19\" cy=\"21\" r=\"1\" /> <path d=\"M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12\" />");
+const Ticket = mkIcon("<path d=\"M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z\" /> <path d=\"M13 5v2\" /> <path d=\"M13 17v2\" /> <path d=\"M13 11v2\" />");
+const LogOut = mkIcon("<path d=\"m16 17 5-5-5-5\" /> <path d=\"M21 12H9\" /> <path d=\"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4\" />");
+const ArrowLeftRight = mkIcon("<path d=\"M8 3 4 7l4 4\" /> <path d=\"M4 7h16\" /> <path d=\"m16 21 4-4-4-4\" /> <path d=\"M20 17H4\" />");
+const User = mkIcon("<path d=\"M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2\" /> <circle cx=\"12\" cy=\"7\" r=\"4\" />");
+const Battery = mkIcon("<path d=\"M 22 14 L 22 10\" /> <rect x=\"2\" y=\"6\" width=\"16\" height=\"12\" rx=\"2\" />");
+const Signal = mkIcon("<path d=\"M2 20h.01\" /> <path d=\"M7 20v-4\" /> <path d=\"M12 20v-8\" /> <path d=\"M17 20V8\" /> <path d=\"M22 4v16\" />");
+const Plus = mkIcon("<path d=\"M5 12h14\" /> <path d=\"M12 5v14\" />");
+const X = mkIcon("<path d=\"M18 6 6 18\" /> <path d=\"m6 6 12 12\" />");
+const Square = mkIcon("<rect width=\"18\" height=\"18\" x=\"3\" y=\"3\" rx=\"2\" />");
+const CheckSquare = mkIcon("<path d=\"M21 10.656V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h12.344\" /> <path d=\"m9 11 3 3L22 4\" />");
+const QrCode = mkIcon("<rect width=\"5\" height=\"5\" x=\"3\" y=\"3\" rx=\"1\" /> <rect width=\"5\" height=\"5\" x=\"16\" y=\"3\" rx=\"1\" /> <rect width=\"5\" height=\"5\" x=\"3\" y=\"16\" rx=\"1\" /> <path d=\"M21 16h-3a2 2 0 0 0-2 2v3\" /> <path d=\"M21 21v.01\" /> <path d=\"M12 7v3a2 2 0 0 1-2 2H7\" /> <path d=\"M3 12h.01\" /> <path d=\"M12 3h.01\" /> <path d=\"M12 16v.01\" /> <path d=\"M16 12h1\" /> <path d=\"M21 12v.01\" /> <path d=\"M12 21v-1\" />");
+const Search = mkIcon("<path d=\"m21 21-4.34-4.34\" /> <circle cx=\"11\" cy=\"11\" r=\"8\" />");
+const Package = mkIcon("<path d=\"M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z\" /> <path d=\"M12 22V12\" /> <polyline points=\"3.29 7 12 12 20.71 7\" /> <path d=\"m7.5 4.27 9 5.15\" />");
+const ShieldCheck = mkIcon("<path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\" /> <path d=\"m9 12 2 2 4-4\" />");
+
+/* ============================================================
+   Смарт ТСД · Umai Group
+   «Мои задачи» (task-движок) + свободный запуск операций.
+   Единый сканер (камера / поток / по одному / ассортимент),
+   подтверждение СБ по QR-бейджу. Кликабельный макет. Один файл.
+   ============================================================ */
+
+// ---- Токены дизайна -----------------------------------------
+const T = {
+  bg: "#EEF1F2",
+  header: "#0C2B2E",
+  headerText: "#EAF3F2",
+  headerMuted: "#7FA3A3",
+  card: "#FFFFFF",
+  border: "#E3E7E8",
+  ink: "#132327",
+  muted: "#61757A",
+  faint: "#93A4A8",
+  primary: "#0E7C7B",
+  primaryDark: "#0A5F5E",
+  urgent: "#D14343",
+  urgentBg: "#FBEAEA",
+  warn: "#B26A00",
+  warnBg: "#FBF0DE",
+  info: "#2C6FB0",
+  infoBg: "#E7F0FA",
+  violet: "#6D5BC0",
+  violetBg: "#EEEBF8",
+  wait: "#5B5F7A",
+  waitBg: "#ECEDF4",
+  done: "#0F7A54",
+  doneBg: "#E3F2EA",
+  scanAccent: "#28E0D0"
+};
+
+// ---- Типы задач ---------------------------------------------
+const TYPE = {
+  receiving: {
+    label: "Приёмка",
+    Icon: Truck,
+    color: T.primary,
+    bg: "#E3F1F1"
+  },
+  transfer: {
+    label: "Перемещение",
+    Icon: Boxes,
+    color: T.info,
+    bg: T.infoBg
+  },
+  pricing: {
+    label: "Ценники",
+    Icon: Tag,
+    color: T.warn,
+    bg: T.warnBg
+  },
+  count: {
+    label: "Пересчёт",
+    Icon: ClipboardList,
+    color: T.violet,
+    bg: T.violetBg
+  },
+  checklist: {
+    label: "Чек-лист",
+    Icon: ListChecks,
+    color: T.done,
+    bg: T.doneBg
+  },
+  writeoff: {
+    label: "Списание",
+    Icon: Trash2,
+    color: T.urgent,
+    bg: T.urgentBg
+  },
+  return: {
+    label: "Возврат",
+    Icon: Undo2,
+    color: T.wait,
+    bg: T.waitBg
+  }
+};
+
+// ---- Демо-ассортимент (для сканера / весового) --------------
+const CATALOG = [{
+  name: "Молоко «Ак-Сүт» 2.5% 0.9л"
+}, {
+  name: "Кефир «Ак-Сүт» 1л"
+}, {
+  name: "Сметана «Ак-Сүт» 20% 400г"
+}, {
+  name: "Сахар «Каинды» 1кг"
+}, {
+  name: "Мука в/с «Акун» 2кг"
+}, {
+  name: "Пиво «Арпа» 0.5л",
+  excise: true
+}, {
+  name: "Сигареты «Ош» пачка",
+  excise: true
+}, {
+  name: "Бананы 1 сорт",
+  weight: true
+}, {
+  name: "Яблоки «Семеренко»",
+  weight: true
+}, {
+  name: "Картофель молодой",
+  weight: true
+}, {
+  name: "Морковь",
+  weight: true
+}, {
+  name: "Крупа гречневая (развес)",
+  weight: true
+}];
+
+// ---- Задачи (реалистичный день операциониста) ---------------
+const INITIAL_TASKS = [{
+  id: "t1",
+  type: "receiving",
+  subject: "Молоко «Ак-Сүт»",
+  source: "Приезд поставщика · пост СБ",
+  location: "Буферная зона",
+  priority: "urgent",
+  assignee: "me",
+  status: "new",
+  deadline: {
+    state: "now",
+    label: "Ожидает у поста"
+  },
+  order: null,
+  excise: false,
+  requiresPhoto: false,
+  progress: {
+    done: 0,
+    total: 18
+  },
+  steps: ["Считать позиции: скан + факт / ассортимент+вес", "Отметить расхождения", "Подтверждение поста СБ (QR-бейдж)", "Провести «Поступление товаров» в 1С"]
+}, {
+  id: "t2",
+  type: "receiving",
+  subject: "Сигареты · пиво «Арпа»",
+  source: "Приезд поставщика · пост СБ",
+  location: "Буферная зона",
+  priority: "urgent",
+  assignee: "me",
+  status: "new",
+  deadline: {
+    state: "now",
+    label: "Ожидает у поста"
+  },
+  order: null,
+  excise: true,
+  requiresPhoto: false,
+  progress: {
+    done: 0,
+    total: 24
+  },
+  steps: ["Считать позиции сканером", "Сверить акцизные марки — скан DataMatrix", "Отметить расхождения", "Подтверждение поста СБ (QR-бейдж)", "Провести в 1С"]
+}, {
+  id: "t3",
+  type: "transfer",
+  subject: "Перемещение №1204 от РЦ",
+  source: "Доставка РЦ · доверительная",
+  location: "Буфер · палеты в плёнке",
+  priority: "normal",
+  assignee: "me",
+  status: "new",
+  deadline: {
+    state: "soon",
+    label: "до 14:00"
+  },
+  order: "Заказ в РЦ №1188",
+  excise: false,
+  requiresPhoto: false,
+  progress: {
+    done: 0,
+    total: 34
+  },
+  steps: ["Сверить накладную перемещения №1204", "Вскрыть плёнку (после старта)", "Считать позиции сканером", "Овощи — перевесить", "Расхождение → пара документов автоматически"]
+}, {
+  id: "t4",
+  type: "pricing",
+  subject: "Переклеить ценники · 23 позиции",
+  source: "Переоценка из 1С",
+  location: "Секция «Бакалея»",
+  priority: "urgent",
+  assignee: "me",
+  status: "in_progress",
+  deadline: {
+    state: "soon",
+    label: "до конца смены"
+  },
+  order: null,
+  excise: false,
+  requiresPhoto: true,
+  photoAttached: false,
+  progress: {
+    done: 8,
+    total: 23
+  },
+  steps: ["Печать ценников (23 шт)", "Переклеить на полке", "Скан-проверка цены", "Фотоотчёт секции (обязательно)"]
+}, {
+  id: "t5",
+  type: "count",
+  subject: "Пересчёт заморозки",
+  source: "Аудит через СБ",
+  location: "Морозильный склад",
+  priority: "urgent",
+  assignee: "me",
+  status: "in_progress",
+  deadline: {
+    state: "overdue",
+    label: "просрочено 25 мин"
+  },
+  order: null,
+  blind: true,
+  excise: false,
+  requiresPhoto: false,
+  progress: {
+    done: 12,
+    total: 40
+  },
+  steps: ["Счёт вслепую — остаток скрыт", "Скан позиции + факт", "Завершить зону"]
+}, {
+  id: "t6",
+  type: "count",
+  subject: "Пересчёт группы «Бакалея»",
+  source: "Запрос бухгалтерии",
+  location: "Секция «Бакалея»",
+  priority: "normal",
+  assignee: "me",
+  status: "new",
+  deadline: {
+    state: "ok",
+    label: "до конца смены"
+  },
+  order: null,
+  blind: true,
+  excise: false,
+  requiresPhoto: false,
+  progress: {
+    done: 0,
+    total: 40
+  },
+  steps: ["Счёт вслепую — остаток скрыт", "Скан позиции + факт", "Завершить зону"]
+}, {
+  id: "t7",
+  type: "writeoff",
+  subject: "Списание · брак 6 позиций",
+  source: "Глава отдела «Фрукты-овощи»",
+  location: "Буфер · корзина",
+  priority: "normal",
+  assignee: "me",
+  status: "waiting",
+  deadline: {
+    state: "ok",
+    label: "цепочка подписей"
+  },
+  order: null,
+  excise: false,
+  requiresPhoto: true,
+  photoAttached: true,
+  chain: [{
+    role: "Операционист",
+    done: true
+  }, {
+    role: "Куратор",
+    done: true
+  }, {
+    role: "Менеджер",
+    done: true
+  }, {
+    role: "Администратор",
+    done: false,
+    current: true
+  }, {
+    role: "Бухгалтер",
+    done: false
+  }, {
+    role: "Проверка СБ",
+    done: false
+  }],
+  steps: []
+}, {
+  id: "t8",
+  type: "count",
+  subject: "Плановая проверка",
+  source: "График СБ",
+  location: "Скрыто до старта",
+  priority: "normal",
+  assignee: "pool",
+  status: "hidden",
+  deadline: {
+    state: "ok",
+    label: "закрытая задача"
+  },
+  order: null,
+  blind: true,
+  hidden: true,
+  excise: false,
+  requiresPhoto: false,
+  progress: {
+    done: 0,
+    total: 15
+  },
+  hiddenSubject: "Пересчёт кассовой зоны · сигареты",
+  steps: ["Счёт вслепую — остаток скрыт", "Скан позиции + факт", "Завершить зону"]
+}, {
+  id: "t9",
+  type: "pricing",
+  subject: "Переклеить ценники · 5 позиций",
+  source: "Переоценка из 1С",
+  location: "Секция «Химия»",
+  priority: "normal",
+  assignee: "pool",
+  status: "new",
+  deadline: {
+    state: "soon",
+    label: "до 15:30"
+  },
+  order: null,
+  excise: false,
+  requiresPhoto: true,
+  photoAttached: false,
+  progress: {
+    done: 0,
+    total: 5
+  },
+  steps: ["Печать ценников (5 шт)", "Переклеить на полке", "Скан-проверка цены", "Фотоотчёт секции"]
+}, {
+  id: "t10",
+  type: "return",
+  subject: "Снять в возврат · просрочка",
+  source: "Глава отдела «Молочка»",
+  location: "Полка → именная зона",
+  priority: "normal",
+  assignee: "pool",
+  status: "new",
+  deadline: {
+    state: "ok",
+    label: "до конца дня"
+  },
+  order: null,
+  excise: false,
+  requiresPhoto: false,
+  progress: {
+    done: 0,
+    total: 7
+  },
+  steps: ["Скан при снятии с полки", "Партия — автоматически", "Товар в именную зону поставщика", "Отгрузка — отдельной задачей"]
+}, {
+  id: "t11",
+  type: "checklist",
+  subject: "Чек-лист открытия смены",
+  source: "Система · 08:00",
+  location: "Торговый зал",
+  priority: "low",
+  assignee: "me",
+  status: "done",
+  deadline: {
+    state: "done",
+    label: "Готово 09:12"
+  },
+  order: null,
+  requiresPhoto: false,
+  steps: []
+}, {
+  id: "t12",
+  type: "receiving",
+  subject: "Приёмка напитков «Шоро»",
+  source: "Приезд поставщика",
+  location: "Буферная зона",
+  priority: "normal",
+  assignee: "me",
+  status: "done",
+  deadline: {
+    state: "done",
+    label: "Готово 10:30 · 42 стр."
+  },
+  order: null,
+  requiresPhoto: false,
+  steps: []
+}];
+
+// ============================================================
+//  СПЕЦИФИКАЦИИ ОПЕРАЦИЙ (свободный запуск)
+//  Типы шагов: choice | confirm | count | route | photo | badge | approval | summary
+// ============================================================
+const OP_SPECS = {
+  receiving: {
+    label: "Приёмка",
+    Icon: Truck,
+    variants: [{
+      key: "supplier",
+      label: "Прямой поставщик",
+      desc: "Поток А · свободный набор, пост СБ, акциз",
+      steps: [{
+        type: "count",
+        title: "Счёт позиций",
+        target: 18,
+        note: "Штучное — скан + факт. Весовое — из ассортимента, ввод веса."
+      }, {
+        type: "choice",
+        title: "Расхождения",
+        options: [{
+          label: "Расхождений нет"
+        }, {
+          label: "Есть недовоз / брак / срок",
+          desc: "Позиция минусуется, сумма корректируется по факту"
+        }]
+      }, {
+        type: "badge",
+        title: "Подтверждение поста СБ",
+        role: "Сотрудник СБ",
+        context: ["Товар на поддоне в буферной зоне", "СБ визуально сверил приёмку"],
+        note: "СБ подтверждает приёмку сканом своего QR-бейджа на устройстве оператора. Отдельное устройство для СБ не нужно."
+      }, {
+        type: "summary",
+        title: "Проведение",
+        action: "Провести «Поступление товаров»",
+        note: "Накладная — в архив (боксфайл)."
+      }]
+    }, {
+      key: "dc",
+      label: "С распределительного центра",
+      desc: "Поток Б · перемещение, доверительная приёмка",
+      steps: [{
+        type: "choice",
+        title: "Накладная перемещения",
+        options: [{
+          label: "Перемещение №1204 (от РЦ)",
+          desc: "Документ-ожидание есть в 1С"
+        }, {
+          label: "Другая накладная"
+        }]
+      }, {
+        type: "confirm",
+        title: "Доверительная приёмка",
+        items: [{
+          label: "Палеты в буферной зоне"
+        }, {
+          label: "Плёнку вскрываю только сейчас"
+        }]
+      }, {
+        type: "count",
+        title: "Счёт позиций",
+        target: 34,
+        note: "Потоковый скан. Овощи — из ассортимента, ввод веса."
+      }, {
+        type: "confirm",
+        title: "Овощи",
+        items: [{
+          label: "Овощи перевешены (усушка/утруска — норма)",
+          optional: true
+        }]
+      }, {
+        type: "choice",
+        title: "Расхождения",
+        options: [{
+          label: "Совпало — один документ «Перемещение»"
+        }, {
+          label: "Недопоставка — пара документов",
+          desc: "«Перемещение» + «Перемещение недопоставка» автоматически"
+        }]
+      }, {
+        type: "badge",
+        title: "Подтверждение поста СБ",
+        role: "Сотрудник СБ",
+        context: ["Палеты в буферной зоне", "СБ визуально сверил перемещение"],
+        note: "Пост СБ на буфере подтверждает движение сканом QR-бейджа."
+      }, {
+        type: "summary",
+        title: "Проведение",
+        action: "Провести перемещение в 1С"
+      }]
+    }]
+  },
+  transfer: {
+    label: "Перемещение",
+    Icon: Boxes,
+    variants: [{
+      key: "to_zal",
+      label: "Склад маркета → торговый зал",
+      desc: "Внутреннее перемещение",
+      steps: [{
+        type: "count",
+        title: "Скан позиций",
+        target: 12,
+        note: "Скан + количество."
+      }, {
+        type: "summary",
+        title: "Проведение",
+        action: "Сформировать «Перемещение»"
+      }]
+    }, {
+      key: "to_market",
+      label: "Маркет → маркет",
+      desc: "Редко · по договорённости руководителей",
+      steps: [{
+        type: "confirm",
+        title: "Согласование",
+        items: [{
+          label: "Согласовано руководителями / заведующими"
+        }]
+      }, {
+        type: "count",
+        title: "Скан позиций",
+        target: 8
+      }, {
+        type: "summary",
+        title: "Проведение",
+        action: "Сформировать «Перемещение»",
+        note: "Транспорт и приёмка получателем — уточняется."
+      }]
+    }, {
+      key: "to_rc",
+      label: "Маркет → РЦ (возвратный поток)",
+      desc: "Оформляется перемещением",
+      steps: [{
+        type: "confirm",
+        title: "Возврат на РЦ",
+        items: [{
+          label: "Возвратный поток на РЦ"
+        }]
+      }, {
+        type: "count",
+        title: "Скан позиций",
+        target: 10
+      }, {
+        type: "summary",
+        title: "Проведение",
+        action: "Сформировать «Перемещение» (на РЦ)"
+      }]
+    }]
+  },
+  count: {
+    label: "Инвентаризация",
+    Icon: ClipboardList,
+    variants: [{
+      key: "selective",
+      label: "Выборочная",
+      desc: "Основная практика · группа или список позиций",
+      steps: [{
+        type: "choice",
+        title: "Что считаем",
+        options: [{
+          label: "Товарная группа"
+        }, {
+          label: "Список позиций"
+        }]
+      }, {
+        type: "confirm",
+        title: "Зона счёта",
+        hint: "Параллельные счётчики — у каждого своя зона",
+        items: [{
+          label: "Зона закреплена за мной"
+        }]
+      }, {
+        type: "count",
+        title: "Счёт (вслепую)",
+        target: 40,
+        blind: true,
+        note: "Учётный остаток скрыт. Развесное — из ассортимента, ввод веса."
+      }, {
+        type: "summary",
+        title: "Завершение зоны",
+        action: "Завершить зону",
+        note: "Ведомость расхождений → у директора/бухгалтера. Право «применить» и повторный счёт спорных строк — до применения."
+      }]
+    }, {
+      key: "full",
+      label: "Полная",
+      desc: "Реже · магазин работает, малолюдные часы",
+      steps: [{
+        type: "confirm",
+        title: "Запуск полной инвентаризации",
+        items: [{
+          label: "Малолюдные часы"
+        }, {
+          label: "Блокировка операций включена"
+        }]
+      }, {
+        type: "confirm",
+        title: "Зона счёта",
+        items: [{
+          label: "Зона закреплена за мной"
+        }]
+      }, {
+        type: "count",
+        title: "Счёт (вслепую)",
+        target: 60,
+        blind: true,
+        note: "Учётный остаток скрыт."
+      }, {
+        type: "summary",
+        title: "Завершение зоны",
+        action: "Завершить зону",
+        note: "Слияние строк нескольких устройств — механика уточняется."
+      }]
+    }]
+  },
+  writeoff: {
+    label: "Списание",
+    Icon: Trash2,
+    steps: [{
+      type: "choice",
+      title: "Причина списания",
+      options: [{
+        label: "Брак"
+      }, {
+        label: "Истёк срок"
+      }, {
+        label: "Бой"
+      }, {
+        label: "Разморозка"
+      }, {
+        label: "Нетоварный вид"
+      }]
+    }, {
+      type: "count",
+      title: "Скан позиций в корзину",
+      target: 6,
+      note: "Весовое — из ассортимента, ввод веса."
+    }, {
+      type: "route",
+      title: "Куда направить товар?",
+      hint: "Развилка «плохого товара» — четыре исхода",
+      options: [{
+        label: "Вернуть на полку",
+        desc: "Товар пригоден",
+        tone: "done"
+      }, {
+        label: "Списать",
+        desc: "Акт списания · норматив 0,1%",
+        tone: "urgent"
+      }, {
+        label: "Возврат поставщику",
+        desc: "В именную зону",
+        tone: "info"
+      }, {
+        label: "Купон",
+        desc: "Выкуп персоналом со скидкой",
+        tone: "violet"
+      }]
+    }, {
+      type: "photo",
+      title: "Фото корзины",
+      note: "Вопрос к СБ: если фото принимается как доказательство — утилизация не ждёт круга подписей."
+    }, {
+      type: "approval",
+      title: "Электронное согласование",
+      chain: ["Операционист", "Куратор", "Менеджер магазина", "Администратор", "Бухгалтер", "Проверка СБ"]
+    }, {
+      type: "summary",
+      title: "Отправка",
+      action: "Отправить на согласование",
+      note: "Цепочку ролей сохраняем, убираем очередь бумаги. Эскалация по дедлайнам."
+    }]
+  },
+  return: {
+    label: "Возврат",
+    Icon: Undo2,
+    variants: [{
+      key: "take",
+      label: "Снять в возврат (поставщику)",
+      desc: "Скан при снятии с полки · партия определяется сразу",
+      steps: [{
+        type: "choice",
+        title: "Причина",
+        options: [{
+          label: "Истёк срок"
+        }, {
+          label: "Брак"
+        }, {
+          label: "Нетоварный вид"
+        }, {
+          label: "Акционные излишки"
+        }]
+      }, {
+        type: "count",
+        title: "Скан в момент снятия",
+        target: 7,
+        note: "Статус: на точке, но вне продажи. Партия — автоматически."
+      }, {
+        type: "summary",
+        title: "Перемещение в зону",
+        action: "В именную зону поставщика",
+        note: "Автозаказ и e-grocery больше не видят снятый товар как доступный."
+      }]
+    }, {
+      key: "ship",
+      label: "Отгрузить возврат (поставщику)",
+      desc: "Автосборка «Комплексного возврата» при приезде машины",
+      steps: [{
+        type: "choice",
+        title: "Зона поставщика",
+        options: [{
+          label: "Поставщик «Ак-Сүт»"
+        }, {
+          label: "Поставщик «Шоро»"
+        }, {
+          label: "Другой"
+        }]
+      }, {
+        type: "badge",
+        title: "Двойной пересчёт: СБ",
+        role: "Сотрудник СБ",
+        context: ["Операционист пересчитал", "3 копии (операционист / СБ / поставщик)"],
+        note: "СБ подтверждает второй пересчёт сканом QR-бейджа."
+      }, {
+        type: "summary",
+        title: "Формирование документа",
+        action: "Сформировать «Комплексный возврат»",
+        note: "1С раскладывает по партиям-поставкам (до 7 мес.) с привязкой к ЭСФ."
+      }]
+    }, {
+      key: "customer",
+      label: "От покупателя",
+      desc: "Маршрутизатор без собственного складского документа",
+      steps: [{
+        type: "route",
+        title: "Оценка пригодности",
+        options: [{
+          label: "Годен → на полку",
+          desc: "Остаток восстанавливается чеком возврата",
+          tone: "done"
+        }, {
+          label: "Негоден → на списание",
+          desc: "Уходит в поток списания",
+          tone: "urgent"
+        }, {
+          label: "Брак поставщика",
+          desc: "В именную зону",
+          tone: "info"
+        }]
+      }, {
+        type: "summary",
+        title: "Маршрутизация",
+        action: "Применить решение"
+      }]
+    }, {
+      key: "to_rc",
+      label: "Маркет → РЦ",
+      desc: "Оформляется перемещением (возвратный поток)",
+      steps: [{
+        type: "count",
+        title: "Скан позиций",
+        target: 9
+      }, {
+        type: "summary",
+        title: "Проведение",
+        action: "Оформить перемещением (на РЦ)"
+      }]
+    }]
+  },
+  pricing: {
+    label: "Ценники",
+    Icon: Tag,
+    variants: [{
+      key: "print",
+      label: "Печать по переоценке",
+      desc: "Задача из 1С · обязательный фотоотчёт",
+      steps: [{
+        type: "count",
+        title: "Печать и переклейка",
+        target: 23,
+        note: "Печать → переклейка на полке."
+      }, {
+        type: "photo",
+        title: "Фотоотчёт секции"
+      }, {
+        type: "summary",
+        title: "Завершение",
+        action: "Завершить переоценку"
+      }]
+    }, {
+      key: "check",
+      label: "Проверка цены сканером",
+      desc: "Цена на полке = цена в системе",
+      steps: [{
+        type: "count",
+        title: "Скан-проверка ценников",
+        target: 10,
+        note: "Расхождение → автозадача на переклейку."
+      }, {
+        type: "summary",
+        title: "Завершение",
+        action: "Готово"
+      }]
+    }]
+  }
+};
+
+// ---- Мелкие кусочки -----------------------------------------
+function DeadlineChip({
+  deadline
+}) {
+  const map = {
+    now: {
+      c: T.urgent,
+      bg: T.urgentBg,
+      Icon: Clock
+    },
+    overdue: {
+      c: T.urgent,
+      bg: T.urgentBg,
+      Icon: AlertTriangle
+    },
+    soon: {
+      c: T.warn,
+      bg: T.warnBg,
+      Icon: Clock
+    },
+    ok: {
+      c: T.muted,
+      bg: "#F1F4F4",
+      Icon: Clock
+    },
+    done: {
+      c: T.done,
+      bg: T.doneBg,
+      Icon: Check
+    }
+  };
+  const s = map[deadline.state] || map.ok;
+  const Ic = s.Icon;
+  return /*#__PURE__*/_jsxDEV("span", {
+    style: {
+      display: "inline-flex",
+      alignItems: "center",
+      gap: 5,
+      color: s.c,
+      background: s.bg,
+      fontSize: 12.5,
+      fontWeight: 600,
+      padding: "4px 9px",
+      borderRadius: 8,
+      whiteSpace: "nowrap",
+      fontVariantNumeric: "tabular-nums"
+    },
+    children: [/*#__PURE__*/_jsxDEV(Ic, {
+      size: 13,
+      strokeWidth: 2.4
+    }, void 0, false), " ", deadline.label]
+  }, void 0, true);
+}
+function Pill({
+  children,
+  color,
+  bg
+}) {
+  return /*#__PURE__*/_jsxDEV("span", {
+    style: {
+      display: "inline-flex",
+      alignItems: "center",
+      gap: 5,
+      color,
+      background: bg,
+      fontSize: 12,
+      fontWeight: 700,
+      padding: "3px 9px",
+      borderRadius: 20,
+      letterSpacing: 0.2
+    },
+    children: children
+  }, void 0, false);
+}
+function ProgressBar({
+  done,
+  total
+}) {
+  const pct = total ? Math.round(done / total * 100) : 0;
+  return /*#__PURE__*/_jsxDEV("div", {
+    style: {
+      marginTop: 10
+    },
+    children: [/*#__PURE__*/_jsxDEV("div", {
+      style: {
+        display: "flex",
+        justifyContent: "space-between",
+        fontSize: 12,
+        color: T.muted,
+        marginBottom: 5,
+        fontWeight: 600
+      },
+      children: [/*#__PURE__*/_jsxDEV("span", {
+        children: "В работе"
+      }, void 0, false), /*#__PURE__*/_jsxDEV("span", {
+        style: {
+          fontVariantNumeric: "tabular-nums",
+          color: T.ink
+        },
+        children: [done, " / ", total]
+      }, void 0, true)]
+    }, void 0, true), /*#__PURE__*/_jsxDEV("div", {
+      style: {
+        height: 6,
+        background: "#EAEEEE",
+        borderRadius: 4,
+        overflow: "hidden"
+      },
+      children: /*#__PURE__*/_jsxDEV("div", {
+        style: {
+          width: `${pct}%`,
+          height: "100%",
+          background: T.primary,
+          borderRadius: 4,
+          transition: "width .3s"
+        }
+      }, void 0, false)
+    }, void 0, false)]
+  }, void 0, true);
+}
+
+// ---- Сканер (камера / поток / по одному / ассортимент) ------
+function ScannerModal({
+  title,
+  initialView = "scan",
+  onAdd,
+  onClose
+}) {
+  const [view, setView] = useState(initialView);
+  const [mode, setMode] = useState("stream");
+  const [items, setItems] = useState([]);
+  const [pending, setPending] = useState(null);
+  const [kind, setKind] = useState("qty");
+  const [val, setVal] = useState("1");
+  const [search, setSearch] = useState("");
+  const [flash, setFlash] = useState(false);
+  const pieceItems = CATALOG.filter(c => !c.weight);
+  const add = (name, qty, kg) => {
+    setItems(p => [{
+      name,
+      qty,
+      kg
+    }, ...p]);
+    onAdd({
+      name,
+      qty,
+      kg
+    });
+  };
+  const doScan = () => {
+    const it = pieceItems[Math.floor(Math.random() * pieceItems.length)];
+    if (mode === "stream") {
+      add(it.name, 1);
+      setFlash(true);
+      setTimeout(() => setFlash(false), 160);
+    } else {
+      setPending({
+        name: it.name
+      });
+      setKind("qty");
+      setVal("1");
+      setView("entry");
+    }
+  };
+  const pick = c => {
+    if (c.weight) {
+      setPending({
+        name: c.name,
+        weight: true
+      });
+      setKind("weight");
+      setVal("");
+    } else {
+      setPending({
+        name: c.name
+      });
+      setKind("qty");
+      setVal("1");
+    }
+    setView("entry");
+  };
+  const confirmEntry = () => {
+    if (kind === "weight") {
+      const v = val.replace(",", ".");
+      if (!v || isNaN(Number(v)) || Number(v) <= 0) return;
+      add(pending.name, 1, v);
+    } else {
+      add(pending.name, Math.max(1, parseInt(val) || 1));
+    }
+    setPending(null);
+    setView("scan");
+  };
+  const filtered = CATALOG.filter(c => c.name.toLowerCase().includes(search.toLowerCase()));
+  const stepBtn = {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    border: "none",
+    cursor: "pointer",
+    background: "rgba(255,255,255,.12)",
+    color: "#fff",
+    fontSize: 26,
+    fontWeight: 700
+  };
+  return /*#__PURE__*/_jsxDEV("div", {
+    style: {
+      position: "absolute",
+      inset: 0,
+      zIndex: 60,
+      background: "#08191B",
+      display: "flex",
+      flexDirection: "column"
+    },
+    children: [/*#__PURE__*/_jsxDEV("style", {
+      children: `@keyframes scly{0%{top:14%}50%{top:80%}100%{top:14%}}`
+    }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+      style: {
+        padding: "14px 16px",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        color: T.headerText
+      },
+      children: [/*#__PURE__*/_jsxDEV("div", {
+        children: [/*#__PURE__*/_jsxDEV("div", {
+          style: {
+            fontSize: 16,
+            fontWeight: 700
+          },
+          children: title || "Сканирование"
+        }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+          style: {
+            fontSize: 12.5,
+            color: T.headerMuted
+          },
+          children: ["Добавлено: ", items.length]
+        }, void 0, true)]
+      }, void 0, true), /*#__PURE__*/_jsxDEV("button", {
+        onClick: onClose,
+        style: {
+          background: T.primary,
+          border: "none",
+          color: "#fff",
+          borderRadius: 10,
+          padding: "9px 16px",
+          cursor: "pointer",
+          fontWeight: 700,
+          fontSize: 14
+        },
+        children: "Готово"
+      }, void 0, false)]
+    }, void 0, true), view === "scan" && /*#__PURE__*/_jsxDEV("div", {
+      style: {
+        flex: 1,
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden",
+        padding: "0 16px 16px"
+      },
+      children: [/*#__PURE__*/_jsxDEV("div", {
+        style: {
+          display: "flex",
+          gap: 6,
+          background: "rgba(255,255,255,.08)",
+          borderRadius: 12,
+          padding: 4,
+          marginBottom: 14
+        },
+        children: [["stream", "Поток"], ["single", "По одному + кол-во"]].map(([m, l]) => /*#__PURE__*/_jsxDEV("button", {
+          onClick: () => setMode(m),
+          style: {
+            flex: 1,
+            padding: "9px 6px",
+            borderRadius: 9,
+            border: "none",
+            cursor: "pointer",
+            fontSize: 13,
+            fontWeight: 700,
+            background: mode === m ? T.primary : "transparent",
+            color: mode === m ? "#fff" : T.headerMuted
+          },
+          children: l
+        }, m, false))
+      }, void 0, false), /*#__PURE__*/_jsxDEV("button", {
+        onClick: doScan,
+        style: {
+          position: "relative",
+          height: 190,
+          borderRadius: 16,
+          border: "none",
+          cursor: "pointer",
+          background: flash ? "#13403F" : "#04292B",
+          overflow: "hidden",
+          flexShrink: 0
+        },
+        children: [/*#__PURE__*/_jsxDEV("div", {
+          style: {
+            position: "absolute",
+            inset: 26,
+            borderRadius: 10,
+            border: `2px solid ${T.scanAccent}55`
+          }
+        }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+          style: {
+            position: "absolute",
+            left: "16%",
+            right: "16%",
+            height: 2,
+            background: T.scanAccent,
+            boxShadow: `0 0 10px ${T.scanAccent}`,
+            animation: "scly 2.4s linear infinite"
+          }
+        }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+          style: {
+            position: "absolute",
+            inset: 0,
+            display: "grid",
+            placeItems: "center",
+            color: "#7FBFBD",
+            pointerEvents: "none"
+          },
+          children: /*#__PURE__*/_jsxDEV("div", {
+            style: {
+              textAlign: "center"
+            },
+            children: [/*#__PURE__*/_jsxDEV(ScanLine, {
+              size: 30
+            }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+              style: {
+                marginTop: 8,
+                fontSize: 13,
+                fontWeight: 600
+              },
+              children: mode === "stream" ? "Наводите на коды подряд" : "Наведите на код"
+            }, void 0, false)]
+          }, void 0, true)
+        }, void 0, false)]
+      }, void 0, true), /*#__PURE__*/_jsxDEV("div", {
+        style: {
+          fontSize: 12,
+          color: T.headerMuted,
+          textAlign: "center",
+          margin: "10px 0 12px",
+          lineHeight: 1.4
+        },
+        children: mode === "stream" ? "Камера считывает коды подряд — кнопку жать не нужно. Тап = имитация скана." : "Скан одного кода → окно ввода количества."
+      }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+        style: {
+          flex: 1,
+          overflowY: "auto",
+          background: "rgba(255,255,255,.05)",
+          borderRadius: 12,
+          padding: items.length ? 4 : 0
+        },
+        children: items.length === 0 ? /*#__PURE__*/_jsxDEV("div", {
+          style: {
+            color: T.headerMuted,
+            fontSize: 13,
+            textAlign: "center",
+            padding: "22px 12px"
+          },
+          children: "Пока ничего не отсканировано"
+        }, void 0, false) : items.map((it, i) => /*#__PURE__*/_jsxDEV("div", {
+          style: {
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "10px",
+            borderBottom: i < items.length - 1 ? "1px solid rgba(255,255,255,.07)" : "none",
+            color: T.headerText
+          },
+          children: [/*#__PURE__*/_jsxDEV("span", {
+            style: {
+              fontSize: 14
+            },
+            children: it.name
+          }, void 0, false), /*#__PURE__*/_jsxDEV("span", {
+            style: {
+              fontSize: 14,
+              fontWeight: 700,
+              color: T.scanAccent,
+              fontVariantNumeric: "tabular-nums"
+            },
+            children: it.kg ? `${it.kg} кг` : `× ${it.qty}`
+          }, void 0, false)]
+        }, i, true))
+      }, void 0, false), /*#__PURE__*/_jsxDEV("button", {
+        onClick: () => {
+          setSearch("");
+          setView("catalog");
+        },
+        style: {
+          marginTop: 12,
+          width: "100%",
+          padding: 14,
+          borderRadius: 12,
+          border: "1px solid rgba(255,255,255,.18)",
+          background: "transparent",
+          color: T.headerText,
+          cursor: "pointer",
+          fontSize: 15,
+          fontWeight: 700,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 8
+        },
+        children: [/*#__PURE__*/_jsxDEV(Search, {
+          size: 18
+        }, void 0, false), " Выбрать из ассортимента (весовой)"]
+      }, void 0, true)]
+    }, void 0, true), view === "entry" && /*#__PURE__*/_jsxDEV("div", {
+      style: {
+        flex: 1,
+        padding: "0 16px 16px",
+        display: "flex",
+        flexDirection: "column"
+      },
+      children: [/*#__PURE__*/_jsxDEV("div", {
+        style: {
+          background: "rgba(255,255,255,.06)",
+          borderRadius: 14,
+          padding: 16,
+          marginBottom: 18
+        },
+        children: [/*#__PURE__*/_jsxDEV("div", {
+          style: {
+            fontSize: 12.5,
+            color: T.headerMuted
+          },
+          children: pending?.weight ? "Весовой товар" : "Товар"
+        }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+          style: {
+            fontSize: 16,
+            fontWeight: 700,
+            color: T.headerText,
+            marginTop: 2
+          },
+          children: pending?.name
+        }, void 0, false)]
+      }, void 0, true), kind === "qty" ? /*#__PURE__*/_jsxDEV("div", {
+        style: {
+          display: "flex",
+          alignItems: "center",
+          gap: 14,
+          justifyContent: "center",
+          marginBottom: 18
+        },
+        children: [/*#__PURE__*/_jsxDEV("button", {
+          onClick: () => setVal(String(Math.max(1, (parseInt(val) || 1) - 1))),
+          style: stepBtn,
+          children: "−"
+        }, void 0, false), /*#__PURE__*/_jsxDEV("input", {
+          value: val,
+          onChange: e => setVal(e.target.value.replace(/\D/g, "")),
+          inputMode: "numeric",
+          style: {
+            width: 96,
+            textAlign: "center",
+            fontSize: 30,
+            fontWeight: 800,
+            padding: "10px",
+            borderRadius: 12,
+            border: "none",
+            background: "rgba(255,255,255,.1)",
+            color: "#fff",
+            outline: "none"
+          }
+        }, void 0, false), /*#__PURE__*/_jsxDEV("button", {
+          onClick: () => setVal(String((parseInt(val) || 0) + 1)),
+          style: stepBtn,
+          children: "+"
+        }, void 0, false)]
+      }, void 0, true) : /*#__PURE__*/_jsxDEV("div", {
+        style: {
+          marginBottom: 18
+        },
+        children: [/*#__PURE__*/_jsxDEV("div", {
+          style: {
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            background: "rgba(255,255,255,.1)",
+            borderRadius: 12,
+            padding: "0 16px"
+          },
+          children: [/*#__PURE__*/_jsxDEV("input", {
+            value: val,
+            onChange: e => setVal(e.target.value.replace(/[^\d.,]/g, "")),
+            inputMode: "decimal",
+            placeholder: "0.000",
+            style: {
+              flex: 1,
+              fontSize: 30,
+              fontWeight: 800,
+              padding: "14px 0",
+              border: "none",
+              background: "transparent",
+              color: "#fff",
+              outline: "none"
+            }
+          }, void 0, false), /*#__PURE__*/_jsxDEV("span", {
+            style: {
+              fontSize: 18,
+              color: T.headerMuted,
+              fontWeight: 700
+            },
+            children: "кг"
+          }, void 0, false)]
+        }, void 0, true), /*#__PURE__*/_jsxDEV("div", {
+          style: {
+            fontSize: 12.5,
+            color: T.headerMuted,
+            marginTop: 8
+          },
+          children: "Весовой товар без ШК — вес вводится вручную (макет весов)."
+        }, void 0, false)]
+      }, void 0, true), /*#__PURE__*/_jsxDEV("div", {
+        style: {
+          marginTop: "auto",
+          display: "flex",
+          gap: 10
+        },
+        children: [/*#__PURE__*/_jsxDEV("button", {
+          onClick: () => {
+            setPending(null);
+            setView("scan");
+          },
+          style: {
+            padding: "14px 20px",
+            borderRadius: 12,
+            border: "1px solid rgba(255,255,255,.18)",
+            background: "transparent",
+            color: T.headerText,
+            cursor: "pointer",
+            fontWeight: 700
+          },
+          children: "Отмена"
+        }, void 0, false), /*#__PURE__*/_jsxDEV("button", {
+          onClick: confirmEntry,
+          style: {
+            flex: 1,
+            padding: 14,
+            borderRadius: 12,
+            border: "none",
+            background: T.primary,
+            color: "#fff",
+            cursor: "pointer",
+            fontSize: 16,
+            fontWeight: 700
+          },
+          children: "Добавить"
+        }, void 0, false)]
+      }, void 0, true)]
+    }, void 0, true), view === "catalog" && /*#__PURE__*/_jsxDEV("div", {
+      style: {
+        flex: 1,
+        padding: "0 16px 16px",
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden"
+      },
+      children: [/*#__PURE__*/_jsxDEV("div", {
+        style: {
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          background: "rgba(255,255,255,.1)",
+          borderRadius: 12,
+          padding: "0 12px",
+          marginBottom: 12
+        },
+        children: [/*#__PURE__*/_jsxDEV(Search, {
+          size: 18,
+          color: T.headerMuted
+        }, void 0, false), /*#__PURE__*/_jsxDEV("input", {
+          value: search,
+          onChange: e => setSearch(e.target.value),
+          placeholder: "Поиск по ассортименту",
+          style: {
+            flex: 1,
+            padding: "12px 0",
+            border: "none",
+            background: "transparent",
+            color: "#fff",
+            fontSize: 15,
+            outline: "none"
+          }
+        }, void 0, false)]
+      }, void 0, true), /*#__PURE__*/_jsxDEV("div", {
+        style: {
+          flex: 1,
+          overflowY: "auto"
+        },
+        children: filtered.map((c, i) => /*#__PURE__*/_jsxDEV("button", {
+          onClick: () => pick(c),
+          style: {
+            display: "flex",
+            width: "100%",
+            textAlign: "left",
+            alignItems: "center",
+            gap: 10,
+            padding: "13px 10px",
+            background: "transparent",
+            border: "none",
+            borderBottom: "1px solid rgba(255,255,255,.07)",
+            cursor: "pointer",
+            color: T.headerText
+          },
+          children: [/*#__PURE__*/_jsxDEV(Package, {
+            size: 18,
+            color: c.weight ? T.scanAccent : T.headerMuted
+          }, void 0, false), /*#__PURE__*/_jsxDEV("span", {
+            style: {
+              flex: 1,
+              fontSize: 14.5
+            },
+            children: c.name
+          }, void 0, false), c.weight && /*#__PURE__*/_jsxDEV("span", {
+            style: {
+              fontSize: 11,
+              fontWeight: 800,
+              color: T.scanAccent,
+              background: "rgba(40,224,208,.14)",
+              padding: "2px 7px",
+              borderRadius: 6
+            },
+            children: "весовой"
+          }, void 0, false), c.excise && /*#__PURE__*/_jsxDEV("span", {
+            style: {
+              fontSize: 11,
+              fontWeight: 800,
+              color: "#E8C86A",
+              background: "rgba(232,200,106,.14)",
+              padding: "2px 7px",
+              borderRadius: 6
+            },
+            children: "акциз"
+          }, void 0, false)]
+        }, i, true))
+      }, void 0, false), /*#__PURE__*/_jsxDEV("button", {
+        onClick: () => setView("scan"),
+        style: {
+          marginTop: 12,
+          width: "100%",
+          padding: 13,
+          borderRadius: 12,
+          border: "1px solid rgba(255,255,255,.18)",
+          background: "transparent",
+          color: T.headerText,
+          cursor: "pointer",
+          fontWeight: 700,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 8
+        },
+        children: [/*#__PURE__*/_jsxDEV(ChevronLeft, {
+          size: 18
+        }, void 0, false), " К сканеру"]
+      }, void 0, true)]
+    }, void 0, true)]
+  }, void 0, true);
+}
+
+// ---- Панель счёта (вызывает сканер) -------------------------
+function CountPanel({
+  done,
+  total,
+  blind,
+  note,
+  title,
+  openScanner,
+  onAdd
+}) {
+  const [bc, setBc] = useState("");
+  return /*#__PURE__*/_jsxDEV("div", {
+    style: {
+      background: T.card,
+      border: `1px solid ${T.border}`,
+      borderRadius: 14,
+      padding: 16
+    },
+    children: [/*#__PURE__*/_jsxDEV("div", {
+      style: {
+        textAlign: "center",
+        marginBottom: 14
+      },
+      children: [/*#__PURE__*/_jsxDEV("div", {
+        style: {
+          fontSize: 34,
+          fontWeight: 800,
+          color: T.ink,
+          fontVariantNumeric: "tabular-nums"
+        },
+        children: [done, " ", /*#__PURE__*/_jsxDEV("span", {
+          style: {
+            color: T.faint,
+            fontWeight: 600,
+            fontSize: 22
+          },
+          children: ["/ ", total]
+        }, void 0, true)]
+      }, void 0, true), /*#__PURE__*/_jsxDEV("div", {
+        style: {
+          fontSize: 13,
+          color: T.muted
+        },
+        children: "позиций считано"
+      }, void 0, false)]
+    }, void 0, true), /*#__PURE__*/_jsxDEV("button", {
+      onClick: () => openScanner({
+        title: title || "Счёт позиций",
+        onAdd
+      }),
+      style: {
+        width: "100%",
+        padding: "16px",
+        borderRadius: 12,
+        border: "none",
+        cursor: "pointer",
+        background: T.primary,
+        color: "#fff",
+        fontSize: 16,
+        fontWeight: 700,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 8
+      },
+      children: [/*#__PURE__*/_jsxDEV(Camera, {
+        size: 22
+      }, void 0, false), " Сканировать позицию"]
+    }, void 0, true), /*#__PURE__*/_jsxDEV("div", {
+      style: {
+        display: "flex",
+        gap: 8,
+        marginTop: 10
+      },
+      children: [/*#__PURE__*/_jsxDEV("input", {
+        value: bc,
+        onChange: e => setBc(e.target.value.replace(/\D/g, "")),
+        placeholder: "Ввести ШК вручную",
+        inputMode: "numeric",
+        style: {
+          flex: 1,
+          padding: "12px",
+          borderRadius: 10,
+          border: `1px solid ${T.border}`,
+          fontSize: 15,
+          color: T.ink,
+          outline: "none"
+        }
+      }, void 0, false), /*#__PURE__*/_jsxDEV("button", {
+        onClick: () => {
+          if (bc) {
+            onAdd({
+              name: `Ручной ввод · ШК ${bc}`,
+              qty: 1
+            });
+            setBc("");
+          }
+        },
+        style: {
+          padding: "0 16px",
+          borderRadius: 10,
+          border: `1px solid ${T.border}`,
+          background: "#F5F7F7",
+          cursor: "pointer",
+          color: T.ink,
+          fontWeight: 700,
+          display: "flex",
+          alignItems: "center",
+          gap: 6
+        },
+        children: [/*#__PURE__*/_jsxDEV(Keyboard, {
+          size: 18
+        }, void 0, false), " Ввод"]
+      }, void 0, true)]
+    }, void 0, true), /*#__PURE__*/_jsxDEV("button", {
+      onClick: () => openScanner({
+        title: title || "Счёт позиций",
+        onAdd,
+        initialView: "catalog"
+      }),
+      style: {
+        width: "100%",
+        marginTop: 10,
+        padding: "13px",
+        borderRadius: 10,
+        border: `1px solid ${T.border}`,
+        background: "#F5F7F7",
+        cursor: "pointer",
+        color: T.ink,
+        fontSize: 15,
+        fontWeight: 700,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 8
+      },
+      children: [/*#__PURE__*/_jsxDEV(Search, {
+        size: 18
+      }, void 0, false), " Выбрать из ассортимента (весовой)"]
+    }, void 0, true), note && /*#__PURE__*/_jsxDEV("div", {
+      style: {
+        fontSize: 12.5,
+        color: T.muted,
+        marginTop: 12,
+        lineHeight: 1.4
+      },
+      children: note
+    }, void 0, false), blind && /*#__PURE__*/_jsxDEV("div", {
+      style: {
+        fontSize: 12.5,
+        color: T.violet,
+        background: T.violetBg,
+        borderRadius: 8,
+        padding: "8px 10px",
+        marginTop: 10,
+        display: "flex",
+        alignItems: "center",
+        gap: 6,
+        fontWeight: 600
+      },
+      children: [/*#__PURE__*/_jsxDEV(Lock, {
+        size: 14
+      }, void 0, false), " Слепой счёт — учётный остаток скрыт"]
+    }, void 0, true)]
+  }, void 0, true);
+}
+
+// ---- Карточка задачи ----------------------------------------
+function TaskCard({
+  task,
+  onOpen
+}) {
+  const meta = TYPE[task.type];
+  const Icon = meta.Icon;
+  const isHidden = task.status === "hidden";
+  const subject = isHidden ? "Плановая проверка" : task.subject;
+  return /*#__PURE__*/_jsxDEV("button", {
+    onClick: () => onOpen(task.id),
+    style: {
+      display: "block",
+      width: "100%",
+      textAlign: "left",
+      cursor: "pointer",
+      background: T.card,
+      border: `1px solid ${T.border}`,
+      borderRadius: 16,
+      padding: 14,
+      marginBottom: 10,
+      boxShadow: "0 1px 2px rgba(19,35,39,.04)",
+      borderLeft: task.priority === "urgent" || task.deadline.state === "overdue" ? `4px solid ${T.urgent}` : `1px solid ${T.border}`
+    },
+    children: [/*#__PURE__*/_jsxDEV("div", {
+      style: {
+        display: "flex",
+        gap: 12,
+        alignItems: "flex-start"
+      },
+      children: [/*#__PURE__*/_jsxDEV("div", {
+        style: {
+          width: 44,
+          height: 44,
+          borderRadius: 12,
+          flexShrink: 0,
+          background: meta.bg,
+          display: "grid",
+          placeItems: "center"
+        },
+        children: /*#__PURE__*/_jsxDEV(Icon, {
+          size: 22,
+          strokeWidth: 2.1,
+          color: meta.color
+        }, void 0, false)
+      }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+        style: {
+          flex: 1,
+          minWidth: 0
+        },
+        children: [/*#__PURE__*/_jsxDEV("div", {
+          style: {
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            marginBottom: 2
+          },
+          children: [/*#__PURE__*/_jsxDEV("span", {
+            style: {
+              fontSize: 11.5,
+              fontWeight: 800,
+              letterSpacing: 0.6,
+              textTransform: "uppercase",
+              color: meta.color
+            },
+            children: meta.label
+          }, void 0, false), task.priority === "urgent" && /*#__PURE__*/_jsxDEV(Pill, {
+            color: T.urgent,
+            bg: T.urgentBg,
+            children: "Срочно"
+          }, void 0, false), task.excise && /*#__PURE__*/_jsxDEV(Pill, {
+            color: T.ink,
+            bg: "#F0EAD6",
+            children: "Акциз"
+          }, void 0, false)]
+        }, void 0, true), /*#__PURE__*/_jsxDEV("div", {
+          style: {
+            fontSize: 16,
+            fontWeight: 700,
+            color: T.ink,
+            lineHeight: 1.25
+          },
+          children: subject
+        }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+          style: {
+            fontSize: 13,
+            color: T.muted,
+            marginTop: 3,
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            flexWrap: "wrap"
+          },
+          children: [isHidden && /*#__PURE__*/_jsxDEV(Lock, {
+            size: 13
+          }, void 0, false), /*#__PURE__*/_jsxDEV("span", {
+            children: task.source
+          }, void 0, false), /*#__PURE__*/_jsxDEV("span", {
+            style: {
+              color: T.faint
+            },
+            children: "·"
+          }, void 0, false), /*#__PURE__*/_jsxDEV("span", {
+            children: task.location
+          }, void 0, false)]
+        }, void 0, true)]
+      }, void 0, true), /*#__PURE__*/_jsxDEV(ChevronRight, {
+        size: 20,
+        color: T.faint,
+        style: {
+          flexShrink: 0,
+          marginTop: 10
+        }
+      }, void 0, false)]
+    }, void 0, true), task.status === "in_progress" && task.progress && /*#__PURE__*/_jsxDEV(ProgressBar, {
+      done: task.progress.done,
+      total: task.progress.total
+    }, void 0, false), task.status === "waiting" && task.chain && /*#__PURE__*/_jsxDEV("div", {
+      style: {
+        marginTop: 10,
+        display: "flex",
+        flexWrap: "wrap",
+        gap: 6,
+        fontSize: 12
+      },
+      children: task.chain.map((c, i) => /*#__PURE__*/_jsxDEV("span", {
+        style: {
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 3,
+          color: c.done ? T.done : c.current ? T.warn : T.faint,
+          fontWeight: 600
+        },
+        children: [c.done ? /*#__PURE__*/_jsxDEV(Check, {
+          size: 12,
+          strokeWidth: 3
+        }, void 0, false) : c.current ? /*#__PURE__*/_jsxDEV(Clock, {
+          size: 12
+        }, void 0, false) : null, c.role, i < task.chain.length - 1 && /*#__PURE__*/_jsxDEV("span", {
+          style: {
+            color: T.faint,
+            marginLeft: 2
+          },
+          children: "›"
+        }, void 0, false)]
+      }, i, true))
+    }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+      style: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginTop: 12
+      },
+      children: [isHidden ? /*#__PURE__*/_jsxDEV("span", {
+        style: {
+          fontSize: 12.5,
+          color: T.wait,
+          fontWeight: 600,
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 5
+        },
+        children: [/*#__PURE__*/_jsxDEV(Lock, {
+          size: 13
+        }, void 0, false), " Раскроется при старте"]
+      }, void 0, true) : /*#__PURE__*/_jsxDEV("span", {
+        style: {
+          fontSize: 12.5,
+          color: T.faint
+        },
+        children: task.order ? task.order : task.assignee === "pool" ? "Свободная · пул ролей" : "\u00A0"
+      }, void 0, false), /*#__PURE__*/_jsxDEV(DeadlineChip, {
+        deadline: task.deadline
+      }, void 0, false)]
+    }, void 0, true)]
+  }, void 0, true);
+}
+
+// ---- Детали задачи ------------------------------------------
+function TaskDetail({
+  task,
+  onBack,
+  onStart,
+  onTake,
+  onScan,
+  onPhoto,
+  onComplete,
+  openScanner,
+  toast
+}) {
+  const meta = TYPE[task.type];
+  const Icon = meta.Icon;
+  const revealed = task.status !== "hidden";
+  const subject = revealed ? task.hidden && task.hiddenSubject ? task.hiddenSubject : task.subject : "Плановая проверка";
+  const canScan = task.status === "in_progress" && task.progress && task.type !== "checklist";
+  return /*#__PURE__*/_jsxDEV("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      height: "100%"
+    },
+    children: [/*#__PURE__*/_jsxDEV("div", {
+      style: {
+        background: T.header,
+        padding: "14px 16px 18px",
+        color: T.headerText
+      },
+      children: [/*#__PURE__*/_jsxDEV("button", {
+        onClick: onBack,
+        style: {
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 4,
+          cursor: "pointer",
+          background: "transparent",
+          border: "none",
+          color: T.headerMuted,
+          fontSize: 14,
+          marginBottom: 12,
+          padding: 0
+        },
+        children: [/*#__PURE__*/_jsxDEV(ChevronLeft, {
+          size: 18
+        }, void 0, false), " Мои задачи"]
+      }, void 0, true), /*#__PURE__*/_jsxDEV("div", {
+        style: {
+          display: "flex",
+          gap: 12,
+          alignItems: "center"
+        },
+        children: [/*#__PURE__*/_jsxDEV("div", {
+          style: {
+            width: 46,
+            height: 46,
+            borderRadius: 12,
+            background: "rgba(255,255,255,.12)",
+            display: "grid",
+            placeItems: "center"
+          },
+          children: /*#__PURE__*/_jsxDEV(Icon, {
+            size: 24,
+            color: "#fff",
+            strokeWidth: 2
+          }, void 0, false)
+        }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+          children: [/*#__PURE__*/_jsxDEV("div", {
+            style: {
+              fontSize: 12,
+              fontWeight: 800,
+              letterSpacing: 0.6,
+              textTransform: "uppercase",
+              color: T.headerMuted
+            },
+            children: meta.label
+          }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+            style: {
+              fontSize: 18,
+              fontWeight: 700
+            },
+            children: subject
+          }, void 0, false)]
+        }, void 0, true)]
+      }, void 0, true)]
+    }, void 0, true), /*#__PURE__*/_jsxDEV("div", {
+      style: {
+        flex: 1,
+        overflowY: "auto",
+        padding: 16,
+        background: T.bg
+      },
+      children: [/*#__PURE__*/_jsxDEV("div", {
+        style: {
+          background: T.card,
+          border: `1px solid ${T.border}`,
+          borderRadius: 14,
+          padding: 4,
+          marginBottom: 14
+        },
+        children: [/*#__PURE__*/_jsxDEV(MetaRow, {
+          label: "Источник",
+          value: task.source
+        }, void 0, false), /*#__PURE__*/_jsxDEV(MetaRow, {
+          label: "Местоположение",
+          value: revealed ? task.location : "Скрыто до старта"
+        }, void 0, false), task.order && /*#__PURE__*/_jsxDEV(MetaRow, {
+          label: "Основание",
+          value: task.order
+        }, void 0, false), /*#__PURE__*/_jsxDEV(MetaRow, {
+          label: "Дедлайн",
+          value: /*#__PURE__*/_jsxDEV(DeadlineChip, {
+            deadline: task.deadline
+          }, void 0, false)
+        }, void 0, false), task.blind && /*#__PURE__*/_jsxDEV(MetaRow, {
+          label: "Режим",
+          value: "Слепой счёт · остаток скрыт"
+        }, void 0, false), task.excise && /*#__PURE__*/_jsxDEV(MetaRow, {
+          label: "Акциз",
+          value: "Сверка акцизных марок"
+        }, void 0, false), task.requiresPhoto && /*#__PURE__*/_jsxDEV(MetaRow, {
+          label: "Фотоотчёт",
+          value: /*#__PURE__*/_jsxDEV("span", {
+            style: {
+              color: task.photoAttached ? T.done : T.warn,
+              fontWeight: 700,
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 5
+            },
+            children: task.photoAttached ? /*#__PURE__*/_jsxDEV(_Fragment, {
+              children: [/*#__PURE__*/_jsxDEV(Check, {
+                size: 14,
+                strokeWidth: 3
+              }, void 0, false), " Прикреплён"]
+            }, void 0, true) : /*#__PURE__*/_jsxDEV(_Fragment, {
+              children: [/*#__PURE__*/_jsxDEV(Camera, {
+                size: 14
+              }, void 0, false), " Обязателен"]
+            }, void 0, true)
+          }, void 0, false)
+        }, void 0, false)]
+      }, void 0, true), !revealed && /*#__PURE__*/_jsxDEV("div", {
+        style: {
+          background: T.waitBg,
+          border: `1px dashed ${T.wait}`,
+          borderRadius: 14,
+          padding: 16,
+          marginBottom: 14,
+          textAlign: "center"
+        },
+        children: [/*#__PURE__*/_jsxDEV(Lock, {
+          size: 26,
+          color: T.wait
+        }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+          style: {
+            fontSize: 15,
+            fontWeight: 700,
+            color: T.ink,
+            marginTop: 8
+          },
+          children: "Закрытая задача"
+        }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+          style: {
+            fontSize: 13.5,
+            color: T.muted,
+            marginTop: 4,
+            lineHeight: 1.4
+          },
+          children: "Содержание откроется только после «Начать» — чтобы счётчик не готовился заранее."
+        }, void 0, false)]
+      }, void 0, true), revealed && task.steps.length > 0 && /*#__PURE__*/_jsxDEV(_Fragment, {
+        children: [/*#__PURE__*/_jsxDEV(SectionLabel, {
+          children: "Шаги"
+        }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+          style: {
+            background: T.card,
+            border: `1px solid ${T.border}`,
+            borderRadius: 14,
+            padding: 6,
+            marginBottom: 14
+          },
+          children: task.steps.map((s, i) => /*#__PURE__*/_jsxDEV("div", {
+            style: {
+              display: "flex",
+              gap: 12,
+              padding: "10px",
+              borderBottom: i < task.steps.length - 1 ? `1px solid ${T.border}` : "none"
+            },
+            children: [/*#__PURE__*/_jsxDEV("div", {
+              style: {
+                width: 24,
+                height: 24,
+                borderRadius: 20,
+                background: meta.bg,
+                color: meta.color,
+                fontSize: 13,
+                fontWeight: 800,
+                display: "grid",
+                placeItems: "center",
+                flexShrink: 0
+              },
+              children: i + 1
+            }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+              style: {
+                fontSize: 14.5,
+                color: T.ink,
+                lineHeight: 1.35
+              },
+              children: s
+            }, void 0, false)]
+          }, i, true))
+        }, void 0, false)]
+      }, void 0, true), task.status === "waiting" && task.chain && /*#__PURE__*/_jsxDEV(_Fragment, {
+        children: [/*#__PURE__*/_jsxDEV(SectionLabel, {
+          children: "Согласование"
+        }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+          style: {
+            background: T.card,
+            border: `1px solid ${T.border}`,
+            borderRadius: 14,
+            padding: 6,
+            marginBottom: 14
+          },
+          children: task.chain.map((c, i) => /*#__PURE__*/_jsxDEV("div", {
+            style: {
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              padding: "11px 10px",
+              borderBottom: i < task.chain.length - 1 ? `1px solid ${T.border}` : "none"
+            },
+            children: [/*#__PURE__*/_jsxDEV("div", {
+              style: {
+                width: 24,
+                height: 24,
+                borderRadius: 20,
+                flexShrink: 0,
+                display: "grid",
+                placeItems: "center",
+                background: c.done ? T.doneBg : c.current ? T.warnBg : "#F1F4F4",
+                color: c.done ? T.done : c.current ? T.warn : T.faint
+              },
+              children: c.done ? /*#__PURE__*/_jsxDEV(Check, {
+                size: 14,
+                strokeWidth: 3
+              }, void 0, false) : c.current ? /*#__PURE__*/_jsxDEV(Clock, {
+                size: 13
+              }, void 0, false) : /*#__PURE__*/_jsxDEV("span", {
+                style: {
+                  fontSize: 12
+                },
+                children: i + 1
+              }, void 0, false)
+            }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+              style: {
+                fontSize: 14.5,
+                color: c.current ? T.ink : T.muted,
+                fontWeight: c.current ? 700 : 500
+              },
+              children: c.role
+            }, void 0, false), c.current && /*#__PURE__*/_jsxDEV("span", {
+              style: {
+                marginLeft: "auto",
+                fontSize: 12.5,
+                color: T.warn,
+                fontWeight: 700
+              },
+              children: "ожидает"
+            }, void 0, false)]
+          }, i, true))
+        }, void 0, false)]
+      }, void 0, true), canScan && /*#__PURE__*/_jsxDEV(_Fragment, {
+        children: [/*#__PURE__*/_jsxDEV(SectionLabel, {
+          children: task.blind ? "Счёт (вслепую)" : "Счёт позиций"
+        }, void 0, false), /*#__PURE__*/_jsxDEV(CountPanel, {
+          done: task.progress.done,
+          total: task.progress.total,
+          blind: task.blind,
+          title: task.blind ? "Счёт (вслепую)" : "Счёт позиций",
+          openScanner: openScanner,
+          onAdd: onScan
+        }, void 0, false)]
+      }, void 0, true)]
+    }, void 0, true), /*#__PURE__*/_jsxDEV("div", {
+      style: {
+        padding: 14,
+        background: T.card,
+        borderTop: `1px solid ${T.border}`
+      },
+      children: [(task.status === "new" || task.status === "hidden") && /*#__PURE__*/_jsxDEV(ActionButton, {
+        onClick: onStart,
+        icon: /*#__PURE__*/_jsxDEV(Play, {
+          size: 20
+        }, void 0, false),
+        children: task.status === "hidden" ? "Начать (раскрыть)" : "Начать"
+      }, void 0, false), task.assignee === "pool" && task.status === "new" && /*#__PURE__*/_jsxDEV(ActionButton, {
+        onClick: onTake,
+        icon: /*#__PURE__*/_jsxDEV(Plus, {
+          size: 20
+        }, void 0, false),
+        variant: "ghost",
+        children: "Взять в работу"
+      }, void 0, false), task.status === "in_progress" && /*#__PURE__*/_jsxDEV(_Fragment, {
+        children: [task.requiresPhoto && !task.photoAttached && /*#__PURE__*/_jsxDEV(ActionButton, {
+          onClick: onPhoto,
+          icon: /*#__PURE__*/_jsxDEV(Camera, {
+            size: 20
+          }, void 0, false),
+          variant: "warn",
+          children: "Сделать фото результата"
+        }, void 0, false), /*#__PURE__*/_jsxDEV(ActionButton, {
+          onClick: () => {
+            if (task.requiresPhoto && !task.photoAttached) {
+              toast("Сначала прикрепите фото результата");
+              return;
+            }
+            onComplete();
+          },
+          icon: /*#__PURE__*/_jsxDEV(CircleCheck, {
+            size: 20
+          }, void 0, false),
+          children: "Завершить"
+        }, void 0, false)]
+      }, void 0, true), task.status === "waiting" && /*#__PURE__*/_jsxDEV(ActionButton, {
+        onClick: () => toast("Напоминание отправлено администратору"),
+        icon: /*#__PURE__*/_jsxDEV(Clock, {
+          size: 20
+        }, void 0, false),
+        variant: "ghost",
+        children: "Напомнить о согласовании"
+      }, void 0, false), task.status === "done" && /*#__PURE__*/_jsxDEV("div", {
+        style: {
+          textAlign: "center",
+          color: T.done,
+          fontWeight: 700,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 8,
+          padding: 6
+        },
+        children: [/*#__PURE__*/_jsxDEV(CircleCheck, {
+          size: 20
+        }, void 0, false), " Задача выполнена"]
+      }, void 0, true)]
+    }, void 0, true)]
+  }, void 0, true);
+}
+function SectionLabel({
+  children
+}) {
+  return /*#__PURE__*/_jsxDEV("div", {
+    style: {
+      fontSize: 13,
+      fontWeight: 800,
+      letterSpacing: 0.5,
+      textTransform: "uppercase",
+      color: T.faint,
+      margin: "4px 2px 10px"
+    },
+    children: children
+  }, void 0, false);
+}
+function MetaRow({
+  label,
+  value
+}) {
+  return /*#__PURE__*/_jsxDEV("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      gap: 12,
+      padding: "10px 12px",
+      borderBottom: `1px solid ${T.border}`
+    },
+    children: [/*#__PURE__*/_jsxDEV("span", {
+      style: {
+        fontSize: 13.5,
+        color: T.muted
+      },
+      children: label
+    }, void 0, false), /*#__PURE__*/_jsxDEV("span", {
+      style: {
+        fontSize: 14,
+        color: T.ink,
+        fontWeight: 600,
+        textAlign: "right"
+      },
+      children: value
+    }, void 0, false)]
+  }, void 0, true);
+}
+function ActionButton({
+  children,
+  onClick,
+  icon,
+  variant,
+  disabled
+}) {
+  const styles = {
+    default: {
+      background: T.primary,
+      color: "#fff",
+      border: "none"
+    },
+    ghost: {
+      background: "#F5F7F7",
+      color: T.ink,
+      border: `1px solid ${T.border}`
+    },
+    warn: {
+      background: T.warnBg,
+      color: T.warn,
+      border: `1px solid ${T.warn}`
+    }
+  };
+  const s = disabled ? {
+    background: "#CFE0E0",
+    color: "#fff",
+    border: "none"
+  } : styles[variant] || styles.default;
+  return /*#__PURE__*/_jsxDEV("button", {
+    onClick: disabled ? undefined : onClick,
+    style: {
+      width: "100%",
+      padding: "15px",
+      borderRadius: 12,
+      cursor: disabled ? "default" : "pointer",
+      fontSize: 16,
+      fontWeight: 700,
+      marginBottom: 8,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 8,
+      ...s
+    },
+    children: [icon, " ", children]
+  }, void 0, true);
+}
+
+// ============================================================
+//  ПОТОК ОПЕРАЦИИ
+// ============================================================
+const TONE = {
+  done: [T.done, T.doneBg],
+  urgent: [T.urgent, T.urgentBg],
+  info: [T.info, T.infoBg],
+  violet: [T.violet, T.violetBg]
+};
+function OperationFlow({
+  op,
+  onExit,
+  openScanner,
+  toast
+}) {
+  const hasVariants = !!op.variants;
+  const [variantKey, setVariantKey] = useState(hasVariants ? null : "_");
+  const variant = hasVariants ? op.variants.find(v => v.key === variantKey) : null;
+  const steps = hasVariants ? variant ? variant.steps : [] : op.steps;
+  const [idx, setIdx] = useState(0);
+  const [choice, setChoice] = useState({});
+  const [checks, setChecks] = useState({});
+  const [lines, setLines] = useState({});
+  const [routes, setRoutes] = useState({});
+  const [photos, setPhotos] = useState({});
+  const [badges, setBadges] = useState({});
+  if (hasVariants && !variantKey) {
+    return /*#__PURE__*/_jsxDEV("div", {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        height: "100%"
+      },
+      children: [/*#__PURE__*/_jsxDEV(FlowHeader, {
+        op: op,
+        sub: "Выберите тип операции",
+        onExit: onExit
+      }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+        style: {
+          flex: 1,
+          overflowY: "auto",
+          padding: 16,
+          background: T.bg
+        },
+        children: op.variants.map(v => /*#__PURE__*/_jsxDEV("button", {
+          onClick: () => {
+            setVariantKey(v.key);
+            setIdx(0);
+          },
+          style: {
+            display: "block",
+            width: "100%",
+            textAlign: "left",
+            cursor: "pointer",
+            background: T.card,
+            border: `1px solid ${T.border}`,
+            borderRadius: 16,
+            padding: 16,
+            marginBottom: 10
+          },
+          children: /*#__PURE__*/_jsxDEV("div", {
+            style: {
+              display: "flex",
+              alignItems: "center",
+              gap: 12
+            },
+            children: [/*#__PURE__*/_jsxDEV("div", {
+              style: {
+                flex: 1
+              },
+              children: [/*#__PURE__*/_jsxDEV("div", {
+                style: {
+                  fontSize: 16,
+                  fontWeight: 700,
+                  color: T.ink
+                },
+                children: v.label
+              }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+                style: {
+                  fontSize: 13,
+                  color: T.muted,
+                  marginTop: 3,
+                  lineHeight: 1.35
+                },
+                children: v.desc
+              }, void 0, false)]
+            }, void 0, true), /*#__PURE__*/_jsxDEV(ChevronRight, {
+              size: 20,
+              color: T.faint
+            }, void 0, false)]
+          }, void 0, true)
+        }, v.key, false))
+      }, void 0, false)]
+    }, void 0, true);
+  }
+  const step = steps[idx];
+  const isSummary = step.type === "summary";
+  const ready = () => {
+    if (step.type === "confirm") return step.items.every((it, i) => it.optional || checks[`${idx}-${i}`]);
+    if (step.type === "choice") return choice[idx] != null;
+    if (step.type === "route") return routes[idx] != null;
+    if (step.type === "photo") return !!photos[idx];
+    if (step.type === "badge") return !!badges[idx];
+    return true;
+  };
+  const goBack = () => {
+    if (idx > 0) setIdx(idx - 1);else if (hasVariants) setVariantKey(null);else onExit();
+  };
+  const goNext = () => {
+    if (ready() && idx < steps.length - 1) setIdx(idx + 1);
+  };
+  const finish = () => {
+    toast(`${op.label}: ${step.action}`);
+    onExit();
+  };
+  return /*#__PURE__*/_jsxDEV("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      height: "100%"
+    },
+    children: [/*#__PURE__*/_jsxDEV(FlowHeader, {
+      op: op,
+      sub: variant ? variant.label : null,
+      progress: `Шаг ${idx + 1} из ${steps.length}`,
+      onExit: onExit
+    }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+      style: {
+        flex: 1,
+        overflowY: "auto",
+        padding: 16,
+        background: T.bg
+      },
+      children: [/*#__PURE__*/_jsxDEV("div", {
+        style: {
+          fontSize: 19,
+          fontWeight: 700,
+          color: T.ink,
+          marginBottom: step.hint ? 4 : 14
+        },
+        children: step.title
+      }, void 0, false), step.hint && /*#__PURE__*/_jsxDEV("div", {
+        style: {
+          fontSize: 13.5,
+          color: T.muted,
+          marginBottom: 14,
+          lineHeight: 1.4
+        },
+        children: step.hint
+      }, void 0, false), step.type === "choice" && step.options.map((o, i) => {
+        const on = choice[idx] === i;
+        return /*#__PURE__*/_jsxDEV("button", {
+          onClick: () => setChoice({
+            ...choice,
+            [idx]: i
+          }),
+          style: {
+            display: "block",
+            width: "100%",
+            textAlign: "left",
+            cursor: "pointer",
+            marginBottom: 10,
+            background: on ? "#E9F4F4" : T.card,
+            border: `2px solid ${on ? T.primary : T.border}`,
+            borderRadius: 14,
+            padding: 14
+          },
+          children: /*#__PURE__*/_jsxDEV("div", {
+            style: {
+              display: "flex",
+              alignItems: "center",
+              gap: 12
+            },
+            children: [/*#__PURE__*/_jsxDEV("div", {
+              style: {
+                width: 22,
+                height: 22,
+                borderRadius: 22,
+                border: `2px solid ${on ? T.primary : T.faint}`,
+                display: "grid",
+                placeItems: "center",
+                flexShrink: 0
+              },
+              children: on && /*#__PURE__*/_jsxDEV("div", {
+                style: {
+                  width: 11,
+                  height: 11,
+                  borderRadius: 11,
+                  background: T.primary
+                }
+              }, void 0, false)
+            }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+              children: [/*#__PURE__*/_jsxDEV("div", {
+                style: {
+                  fontSize: 15.5,
+                  fontWeight: 700,
+                  color: T.ink
+                },
+                children: o.label
+              }, void 0, false), o.desc && /*#__PURE__*/_jsxDEV("div", {
+                style: {
+                  fontSize: 13,
+                  color: T.muted,
+                  marginTop: 2
+                },
+                children: o.desc
+              }, void 0, false)]
+            }, void 0, true)]
+          }, void 0, true)
+        }, i, false);
+      }), step.type === "confirm" && step.items.map((it, i) => {
+        const on = !!checks[`${idx}-${i}`];
+        return /*#__PURE__*/_jsxDEV("button", {
+          onClick: () => setChecks({
+            ...checks,
+            [`${idx}-${i}`]: !on
+          }),
+          style: {
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            width: "100%",
+            textAlign: "left",
+            cursor: "pointer",
+            marginBottom: 10,
+            background: T.card,
+            border: `1px solid ${T.border}`,
+            borderRadius: 14,
+            padding: 14
+          },
+          children: [on ? /*#__PURE__*/_jsxDEV(CheckSquare, {
+            size: 24,
+            color: T.primary
+          }, void 0, false) : /*#__PURE__*/_jsxDEV(Square, {
+            size: 24,
+            color: T.faint
+          }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+            style: {
+              fontSize: 15,
+              fontWeight: 600,
+              color: T.ink
+            },
+            children: [it.label, " ", it.optional && /*#__PURE__*/_jsxDEV("span", {
+              style: {
+                color: T.faint,
+                fontWeight: 500
+              },
+              children: "· если применимо"
+            }, void 0, false)]
+          }, void 0, true)]
+        }, i, true);
+      }), step.type === "count" && /*#__PURE__*/_jsxDEV(CountPanel, {
+        done: (lines[idx] || []).length,
+        total: step.target,
+        blind: step.blind,
+        note: step.note,
+        title: step.title,
+        openScanner: openScanner,
+        onAdd: item => setLines(prev => {
+          const cur = prev[idx] || [];
+          if (cur.length >= step.target) return prev;
+          return {
+            ...prev,
+            [idx]: [...cur, item || {
+              name: "Позиция",
+              qty: 1
+            }]
+          };
+        })
+      }, void 0, false), step.type === "route" && step.options.map((o, i) => {
+        const on = routes[idx] === i;
+        const [c, bg] = TONE[o.tone] || [T.ink, "#F1F4F4"];
+        return /*#__PURE__*/_jsxDEV("button", {
+          onClick: () => setRoutes({
+            ...routes,
+            [idx]: i
+          }),
+          style: {
+            display: "block",
+            width: "100%",
+            textAlign: "left",
+            cursor: "pointer",
+            marginBottom: 10,
+            background: on ? bg : T.card,
+            border: `2px solid ${on ? c : T.border}`,
+            borderRadius: 14,
+            padding: 14
+          },
+          children: [/*#__PURE__*/_jsxDEV("div", {
+            style: {
+              fontSize: 15.5,
+              fontWeight: 700,
+              color: on ? c : T.ink
+            },
+            children: o.label
+          }, void 0, false), o.desc && /*#__PURE__*/_jsxDEV("div", {
+            style: {
+              fontSize: 13,
+              color: T.muted,
+              marginTop: 2
+            },
+            children: o.desc
+          }, void 0, false)]
+        }, i, true);
+      }), step.type === "photo" && /*#__PURE__*/_jsxDEV("div", {
+        style: {
+          background: T.card,
+          border: `1px solid ${T.border}`,
+          borderRadius: 14,
+          padding: 20,
+          textAlign: "center"
+        },
+        children: [photos[idx] ? /*#__PURE__*/_jsxDEV(_Fragment, {
+          children: [/*#__PURE__*/_jsxDEV("div", {
+            style: {
+              width: 64,
+              height: 64,
+              borderRadius: 12,
+              background: T.doneBg,
+              display: "grid",
+              placeItems: "center",
+              margin: "0 auto 12px"
+            },
+            children: /*#__PURE__*/_jsxDEV(Check, {
+              size: 30,
+              color: T.done,
+              strokeWidth: 2.5
+            }, void 0, false)
+          }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+            style: {
+              fontSize: 15,
+              fontWeight: 700,
+              color: T.done
+            },
+            children: "Фото прикреплено"
+          }, void 0, false)]
+        }, void 0, true) : /*#__PURE__*/_jsxDEV(_Fragment, {
+          children: [/*#__PURE__*/_jsxDEV("button", {
+            onClick: () => setPhotos({
+              ...photos,
+              [idx]: true
+            }),
+            style: {
+              width: 64,
+              height: 64,
+              borderRadius: 12,
+              background: T.warnBg,
+              border: "none",
+              cursor: "pointer",
+              display: "grid",
+              placeItems: "center",
+              margin: "0 auto 12px"
+            },
+            children: /*#__PURE__*/_jsxDEV(Camera, {
+              size: 30,
+              color: T.warn
+            }, void 0, false)
+          }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+            style: {
+              fontSize: 15,
+              fontWeight: 700,
+              color: T.ink
+            },
+            children: "Сделать фото"
+          }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+            style: {
+              fontSize: 12.5,
+              color: T.faint,
+              marginTop: 4
+            },
+            children: "Макет: тап имитирует съёмку"
+          }, void 0, false)]
+        }, void 0, true), step.note && /*#__PURE__*/_jsxDEV("div", {
+          style: {
+            fontSize: 12.5,
+            color: T.muted,
+            marginTop: 14,
+            lineHeight: 1.4,
+            textAlign: "left"
+          },
+          children: step.note
+        }, void 0, false)]
+      }, void 0, true), step.type === "badge" && /*#__PURE__*/_jsxDEV("div", {
+        children: [step.context && /*#__PURE__*/_jsxDEV("div", {
+          style: {
+            background: T.card,
+            border: `1px solid ${T.border}`,
+            borderRadius: 14,
+            padding: 6,
+            marginBottom: 12
+          },
+          children: step.context.map((c, i) => /*#__PURE__*/_jsxDEV("div", {
+            style: {
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              padding: "10px",
+              borderBottom: i < step.context.length - 1 ? `1px solid ${T.border}` : "none"
+            },
+            children: [/*#__PURE__*/_jsxDEV(Check, {
+              size: 18,
+              color: T.done,
+              strokeWidth: 2.6
+            }, void 0, false), /*#__PURE__*/_jsxDEV("span", {
+              style: {
+                fontSize: 14.5,
+                color: T.ink
+              },
+              children: c
+            }, void 0, false)]
+          }, i, true))
+        }, void 0, false), badges[idx] ? /*#__PURE__*/_jsxDEV("div", {
+          style: {
+            background: T.doneBg,
+            border: `1px solid ${T.done}`,
+            borderRadius: 14,
+            padding: 16,
+            display: "flex",
+            alignItems: "center",
+            gap: 12
+          },
+          children: [/*#__PURE__*/_jsxDEV(ShieldCheck, {
+            size: 30,
+            color: T.done
+          }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+            children: [/*#__PURE__*/_jsxDEV("div", {
+              style: {
+                fontSize: 15,
+                fontWeight: 700,
+                color: T.done
+              },
+              children: "Подтверждено"
+            }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+              style: {
+                fontSize: 13.5,
+                color: T.ink,
+                marginTop: 2
+              },
+              children: [badges[idx].name, " · ", step.role, " · ", badges[idx].time]
+            }, void 0, true)]
+          }, void 0, true)]
+        }, void 0, true) : /*#__PURE__*/_jsxDEV("button", {
+          onClick: () => setBadges({
+            ...badges,
+            [idx]: {
+              name: "Э. Осмонов",
+              time: "12:49"
+            }
+          }),
+          style: {
+            width: "100%",
+            padding: 18,
+            borderRadius: 14,
+            border: `2px dashed ${T.primary}`,
+            background: "#E9F4F4",
+            cursor: "pointer",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 10
+          },
+          children: [/*#__PURE__*/_jsxDEV(QrCode, {
+            size: 40,
+            color: T.primary
+          }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+            style: {
+              fontSize: 16,
+              fontWeight: 700,
+              color: T.primary
+            },
+            children: "Сканировать QR-бейдж СБ"
+          }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+            style: {
+              fontSize: 12.5,
+              color: T.muted
+            },
+            children: "Макет: тап имитирует скан бейджа"
+          }, void 0, false)]
+        }, void 0, true), step.note && /*#__PURE__*/_jsxDEV("div", {
+          style: {
+            fontSize: 12.5,
+            color: T.muted,
+            marginTop: 12,
+            lineHeight: 1.45
+          },
+          children: step.note
+        }, void 0, false)]
+      }, void 0, true), step.type === "approval" && /*#__PURE__*/_jsxDEV("div", {
+        style: {
+          background: T.card,
+          border: `1px solid ${T.border}`,
+          borderRadius: 14,
+          padding: 6
+        },
+        children: [step.chain.map((role, i) => /*#__PURE__*/_jsxDEV("div", {
+          style: {
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            padding: "12px 10px",
+            borderBottom: i < step.chain.length - 1 ? `1px solid ${T.border}` : "none"
+          },
+          children: [/*#__PURE__*/_jsxDEV("div", {
+            style: {
+              width: 24,
+              height: 24,
+              borderRadius: 20,
+              background: "#F1F4F4",
+              color: T.muted,
+              fontSize: 12,
+              fontWeight: 800,
+              display: "grid",
+              placeItems: "center"
+            },
+            children: i + 1
+          }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+            style: {
+              fontSize: 15,
+              color: T.ink,
+              fontWeight: 600
+            },
+            children: role
+          }, void 0, false), i < step.chain.length - 1 && /*#__PURE__*/_jsxDEV(ChevronRight, {
+            size: 16,
+            color: T.faint,
+            style: {
+              marginLeft: "auto"
+            }
+          }, void 0, false)]
+        }, i, true)), /*#__PURE__*/_jsxDEV("div", {
+          style: {
+            fontSize: 12.5,
+            color: T.muted,
+            padding: "10px",
+            lineHeight: 1.4
+          },
+          children: "Параллельно, с дедлайнами и эскалацией. Бумажную очередь убираем, роли сохраняем."
+        }, void 0, false)]
+      }, void 0, true), isSummary && /*#__PURE__*/_jsxDEV("div", {
+        children: [steps.slice(0, idx).map((s, i) => {
+          if (s.type === "count") {
+            const arr = lines[i] || [];
+            return /*#__PURE__*/_jsxDEV("div", {
+              style: {
+                background: T.card,
+                border: `1px solid ${T.border}`,
+                borderRadius: 14,
+                marginBottom: 12,
+                overflow: "hidden"
+              },
+              children: [/*#__PURE__*/_jsxDEV("div", {
+                style: {
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: "12px 14px",
+                  borderBottom: `1px solid ${T.border}`
+                },
+                children: [/*#__PURE__*/_jsxDEV("span", {
+                  style: {
+                    fontSize: 14,
+                    fontWeight: 700,
+                    color: T.ink
+                  },
+                  children: s.title
+                }, void 0, false), /*#__PURE__*/_jsxDEV("span", {
+                  style: {
+                    fontSize: 13.5,
+                    color: T.muted,
+                    fontWeight: 600,
+                    fontVariantNumeric: "tabular-nums"
+                  },
+                  children: [arr.length, " поз."]
+                }, void 0, true)]
+              }, void 0, true), arr.length === 0 ? /*#__PURE__*/_jsxDEV("div", {
+                style: {
+                  padding: "12px 14px",
+                  fontSize: 13.5,
+                  color: T.faint
+                },
+                children: "Ничего не добавлено"
+              }, void 0, false) : arr.map((it, j) => /*#__PURE__*/_jsxDEV("div", {
+                style: {
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: 12,
+                  padding: "10px 14px",
+                  borderBottom: j < arr.length - 1 ? `1px solid ${T.border}` : "none"
+                },
+                children: [/*#__PURE__*/_jsxDEV("span", {
+                  style: {
+                    fontSize: 14,
+                    color: T.ink
+                  },
+                  children: it.name
+                }, void 0, false), /*#__PURE__*/_jsxDEV("span", {
+                  style: {
+                    fontSize: 14,
+                    fontWeight: 700,
+                    color: T.primary,
+                    fontVariantNumeric: "tabular-nums",
+                    whiteSpace: "nowrap"
+                  },
+                  children: it.kg ? `${it.kg} кг` : `× ${it.qty}`
+                }, void 0, false)]
+              }, j, true))]
+            }, i, true);
+          }
+          let val = null;
+          if (s.type === "choice" && choice[i] != null) val = s.options[choice[i]].label;else if (s.type === "route" && routes[i] != null) val = s.options[routes[i]].label;else if (s.type === "photo") val = photos[i] ? "прикреплено" : "—";else if (s.type === "badge") val = badges[i] ? `подтвердил ${badges[i].name}` : "—";else if (s.type === "confirm") val = "подтверждено";else if (s.type === "approval") val = "цепочка задана";
+          if (val == null) return null;
+          return /*#__PURE__*/_jsxDEV("div", {
+            style: {
+              background: T.card,
+              border: `1px solid ${T.border}`,
+              borderRadius: 14,
+              padding: "12px 14px",
+              marginBottom: 12,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: 12
+            },
+            children: [/*#__PURE__*/_jsxDEV("span", {
+              style: {
+                fontSize: 13.5,
+                color: T.muted
+              },
+              children: s.title
+            }, void 0, false), /*#__PURE__*/_jsxDEV("span", {
+              style: {
+                fontSize: 14,
+                color: T.ink,
+                fontWeight: 600,
+                textAlign: "right"
+              },
+              children: val
+            }, void 0, false)]
+          }, i, true);
+        }), step.note && /*#__PURE__*/_jsxDEV("div", {
+          style: {
+            fontSize: 13,
+            color: T.muted,
+            background: "#F1F4F4",
+            borderRadius: 12,
+            padding: "12px 14px",
+            lineHeight: 1.45
+          },
+          children: step.note
+        }, void 0, false)]
+      }, void 0, true)]
+    }, void 0, true), /*#__PURE__*/_jsxDEV("div", {
+      style: {
+        padding: 14,
+        background: T.card,
+        borderTop: `1px solid ${T.border}`
+      },
+      children: isSummary ? /*#__PURE__*/_jsxDEV(ActionButton, {
+        onClick: finish,
+        icon: /*#__PURE__*/_jsxDEV(CircleCheck, {
+          size: 20
+        }, void 0, false),
+        children: step.action
+      }, void 0, false) : /*#__PURE__*/_jsxDEV("div", {
+        style: {
+          display: "flex",
+          gap: 10
+        },
+        children: [/*#__PURE__*/_jsxDEV("button", {
+          onClick: goBack,
+          style: {
+            padding: "15px 20px",
+            borderRadius: 12,
+            border: `1px solid ${T.border}`,
+            background: "#F5F7F7",
+            cursor: "pointer",
+            fontSize: 15,
+            fontWeight: 700,
+            color: T.ink
+          },
+          children: "Назад"
+        }, void 0, false), /*#__PURE__*/_jsxDEV("button", {
+          onClick: goNext,
+          disabled: !ready(),
+          style: {
+            flex: 1,
+            padding: "15px",
+            borderRadius: 12,
+            border: "none",
+            cursor: ready() ? "pointer" : "default",
+            background: ready() ? T.primary : "#CFE0E0",
+            color: "#fff",
+            fontSize: 16,
+            fontWeight: 700,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 8
+          },
+          children: ["Далее ", /*#__PURE__*/_jsxDEV(ChevronRight, {
+            size: 20
+          }, void 0, false)]
+        }, void 0, true)]
+      }, void 0, true)
+    }, void 0, false)]
+  }, void 0, true);
+}
+function FlowHeader({
+  op,
+  sub,
+  progress,
+  onExit
+}) {
+  const Icon = op.Icon;
+  return /*#__PURE__*/_jsxDEV("div", {
+    style: {
+      background: T.header,
+      padding: "14px 16px 16px",
+      color: T.headerText
+    },
+    children: [/*#__PURE__*/_jsxDEV("div", {
+      style: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "flex-start",
+        marginBottom: 12
+      },
+      children: [/*#__PURE__*/_jsxDEV("span", {
+        style: {
+          fontSize: 12.5,
+          color: T.headerMuted,
+          fontWeight: 600
+        },
+        children: "Свободный запуск операции"
+      }, void 0, false), /*#__PURE__*/_jsxDEV("button", {
+        onClick: onExit,
+        style: {
+          background: "transparent",
+          border: "none",
+          cursor: "pointer",
+          color: T.headerMuted,
+          padding: 0
+        },
+        children: /*#__PURE__*/_jsxDEV(X, {
+          size: 22
+        }, void 0, false)
+      }, void 0, false)]
+    }, void 0, true), /*#__PURE__*/_jsxDEV("div", {
+      style: {
+        display: "flex",
+        gap: 12,
+        alignItems: "center"
+      },
+      children: [/*#__PURE__*/_jsxDEV("div", {
+        style: {
+          width: 46,
+          height: 46,
+          borderRadius: 12,
+          background: "rgba(255,255,255,.12)",
+          display: "grid",
+          placeItems: "center"
+        },
+        children: /*#__PURE__*/_jsxDEV(Icon, {
+          size: 24,
+          color: "#fff",
+          strokeWidth: 2
+        }, void 0, false)
+      }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+        children: [/*#__PURE__*/_jsxDEV("div", {
+          style: {
+            fontSize: 18,
+            fontWeight: 700
+          },
+          children: op.label
+        }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+          style: {
+            fontSize: 13,
+            color: T.headerMuted
+          },
+          children: [sub || "\u00A0", progress ? ` · ${progress}` : ""]
+        }, void 0, true)]
+      }, void 0, true)]
+    }, void 0, true)]
+  }, void 0, true);
+}
+
+// ---- «Операции» ---------------------------------------------
+function OperationsScreen({
+  onOpen,
+  toast
+}) {
+  const ops = [{
+    key: "receiving",
+    label: "Приёмка",
+    Icon: Truck
+  }, {
+    key: "transfer",
+    label: "Перемещение",
+    Icon: Boxes
+  }, {
+    key: "count",
+    label: "Инвентаризация",
+    Icon: ClipboardList
+  }, {
+    key: "writeoff",
+    label: "Списание",
+    Icon: Trash2
+  }, {
+    key: "return",
+    label: "Возврат",
+    Icon: Undo2
+  }, {
+    key: "pricing",
+    label: "Ценники",
+    Icon: Tag
+  }, {
+    key: "order",
+    label: "Заказ товара",
+    Icon: ShoppingCart,
+    wave: "R2"
+  }, {
+    key: "coupon",
+    label: "Купон",
+    Icon: Ticket,
+    wave: "R2"
+  }];
+  return /*#__PURE__*/_jsxDEV("div", {
+    style: {
+      padding: 16
+    },
+    children: [/*#__PURE__*/_jsxDEV("div", {
+      style: {
+        fontSize: 14,
+        color: T.muted,
+        marginBottom: 16,
+        lineHeight: 1.45
+      },
+      children: "Запуск операции вручную — без задачи от системы. Многие операции (приход поставщика, разовый пересчёт, списание) так и начинаются: с этого экрана."
+    }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+      style: {
+        display: "grid",
+        gridTemplateColumns: "1fr 1fr",
+        gap: 10
+      },
+      children: ops.map(o => {
+        const Ic = o.Icon;
+        const locked = !!o.wave;
+        return /*#__PURE__*/_jsxDEV("button", {
+          disabled: locked,
+          onClick: () => locked ? toast(`«${o.label}» — волна ${o.wave}`) : onOpen(o.key),
+          style: {
+            background: T.card,
+            border: `1px solid ${T.border}`,
+            borderRadius: 16,
+            padding: "20px 12px",
+            cursor: locked ? "default" : "pointer",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 10,
+            opacity: locked ? 0.5 : 1,
+            position: "relative"
+          },
+          children: [o.wave && /*#__PURE__*/_jsxDEV("span", {
+            style: {
+              position: "absolute",
+              top: 8,
+              right: 8,
+              fontSize: 10,
+              fontWeight: 800,
+              color: T.wait,
+              background: T.waitBg,
+              padding: "2px 6px",
+              borderRadius: 6
+            },
+            children: o.wave
+          }, void 0, false), /*#__PURE__*/_jsxDEV(Ic, {
+            size: 28,
+            color: T.primary,
+            strokeWidth: 2
+          }, void 0, false), /*#__PURE__*/_jsxDEV("span", {
+            style: {
+              fontSize: 14,
+              fontWeight: 700,
+              color: T.ink
+            },
+            children: o.label
+          }, void 0, false)]
+        }, o.key, true);
+      })
+    }, void 0, false)]
+  }, void 0, true);
+}
+
+// ---- «Смена» -------------------------------------------------
+function ShiftScreen({
+  online,
+  queue,
+  toast
+}) {
+  return /*#__PURE__*/_jsxDEV("div", {
+    style: {
+      padding: 16
+    },
+    children: [/*#__PURE__*/_jsxDEV("div", {
+      style: {
+        background: T.card,
+        border: `1px solid ${T.border}`,
+        borderRadius: 16,
+        padding: 16,
+        marginBottom: 12,
+        display: "flex",
+        gap: 14,
+        alignItems: "center"
+      },
+      children: [/*#__PURE__*/_jsxDEV("div", {
+        style: {
+          width: 52,
+          height: 52,
+          borderRadius: 26,
+          background: T.primary,
+          display: "grid",
+          placeItems: "center",
+          color: "#fff",
+          fontSize: 20,
+          fontWeight: 800
+        },
+        children: "А"
+      }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+        children: [/*#__PURE__*/_jsxDEV("div", {
+          style: {
+            fontSize: 17,
+            fontWeight: 700,
+            color: T.ink
+          },
+          children: "Айгүль С."
+        }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+          style: {
+            fontSize: 13.5,
+            color: T.muted
+          },
+          children: "Операционист · Маркет №14"
+        }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+          style: {
+            fontSize: 13,
+            color: T.faint,
+            marginTop: 2
+          },
+          children: "Смена 08:00–17:00"
+        }, void 0, false)]
+      }, void 0, true)]
+    }, void 0, true), /*#__PURE__*/_jsxDEV("div", {
+      style: {
+        background: T.card,
+        border: `1px solid ${T.border}`,
+        borderRadius: 16,
+        padding: 4,
+        marginBottom: 12
+      },
+      children: [/*#__PURE__*/_jsxDEV(MetaRow, {
+        label: "Устройство",
+        value: "TSD-014-03"
+      }, void 0, false), /*#__PURE__*/_jsxDEV(MetaRow, {
+        label: "Синхронизация",
+        value: online ? "В сети" : `Офлайн · ${queue} в очереди`
+      }, void 0, false), /*#__PURE__*/_jsxDEV(MetaRow, {
+        label: "Батарея",
+        value: "78%"
+      }, void 0, false), /*#__PURE__*/_jsxDEV(MetaRow, {
+        label: "Версия",
+        value: "СмартТСД 0.9 (макет)"
+      }, void 0, false)]
+    }, void 0, true), /*#__PURE__*/_jsxDEV("div", {
+      style: {
+        background: T.card,
+        border: `1px solid ${T.border}`,
+        borderRadius: 16,
+        padding: 4,
+        marginBottom: 16
+      },
+      children: [/*#__PURE__*/_jsxDEV(MetaRow, {
+        label: "Открытие смены",
+        value: /*#__PURE__*/_jsxDEV("span", {
+          style: {
+            color: T.done,
+            fontWeight: 700
+          },
+          children: "Готово 09:12"
+        }, void 0, false)
+      }, void 0, false), /*#__PURE__*/_jsxDEV(MetaRow, {
+        label: "Закрытие смены",
+        value: /*#__PURE__*/_jsxDEV("span", {
+          style: {
+            color: T.faint
+          },
+          children: "после 17:00"
+        }, void 0, false)
+      }, void 0, false)]
+    }, void 0, true), /*#__PURE__*/_jsxDEV("button", {
+      onClick: () => toast("Передача смены устройства"),
+      style: {
+        width: "100%",
+        padding: 15,
+        borderRadius: 12,
+        border: `1px solid ${T.border}`,
+        background: "#F5F7F7",
+        cursor: "pointer",
+        fontSize: 15,
+        fontWeight: 700,
+        color: T.ink,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 8,
+        marginBottom: 8
+      },
+      children: [/*#__PURE__*/_jsxDEV(ArrowLeftRight, {
+        size: 19
+      }, void 0, false), " Передать смену устройства"]
+    }, void 0, true), /*#__PURE__*/_jsxDEV("button", {
+      onClick: () => toast("Выход из смены"),
+      style: {
+        width: "100%",
+        padding: 15,
+        borderRadius: 12,
+        border: "none",
+        background: T.urgentBg,
+        cursor: "pointer",
+        fontSize: 15,
+        fontWeight: 700,
+        color: T.urgent,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 8
+      },
+      children: [/*#__PURE__*/_jsxDEV(LogOut, {
+        size: 19
+      }, void 0, false), " Выйти"]
+    }, void 0, true)]
+  }, void 0, true);
+}
+
+// ---- Нижняя навигация ---------------------------------------
+function BottomNav({
+  active,
+  setActive,
+  taskCount
+}) {
+  const items = [{
+    key: "tasks",
+    label: "Задачи",
+    Icon: ListChecks,
+    badge: taskCount
+  }, {
+    key: "ops",
+    label: "Операции",
+    Icon: PackageCheck
+  }, {
+    key: "shift",
+    label: "Смена",
+    Icon: User
+  }];
+  return /*#__PURE__*/_jsxDEV("div", {
+    style: {
+      display: "flex",
+      background: T.card,
+      borderTop: `1px solid ${T.border}`
+    },
+    children: items.map(it => {
+      const Ic = it.Icon;
+      const on = active === it.key;
+      return /*#__PURE__*/_jsxDEV("button", {
+        onClick: () => setActive(it.key),
+        style: {
+          flex: 1,
+          padding: "9px 0 11px",
+          background: "transparent",
+          border: "none",
+          cursor: "pointer",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 3,
+          color: on ? T.primary : T.faint,
+          position: "relative"
+        },
+        children: [/*#__PURE__*/_jsxDEV("div", {
+          style: {
+            position: "relative"
+          },
+          children: [/*#__PURE__*/_jsxDEV(Ic, {
+            size: 23,
+            strokeWidth: on ? 2.4 : 2
+          }, void 0, false), it.badge > 0 && /*#__PURE__*/_jsxDEV("span", {
+            style: {
+              position: "absolute",
+              top: -6,
+              right: -10,
+              background: T.urgent,
+              color: "#fff",
+              fontSize: 10.5,
+              fontWeight: 800,
+              minWidth: 17,
+              height: 17,
+              borderRadius: 9,
+              display: "grid",
+              placeItems: "center",
+              padding: "0 3px"
+            },
+            children: it.badge
+          }, void 0, false)]
+        }, void 0, true), /*#__PURE__*/_jsxDEV("span", {
+          style: {
+            fontSize: 11.5,
+            fontWeight: on ? 700 : 600
+          },
+          children: it.label
+        }, void 0, false)]
+      }, it.key, true);
+    })
+  }, void 0, false);
+}
+
+// ---- Главный экран задач -------------------------------------
+function TasksScreen({
+  tasks,
+  online,
+  queue,
+  toggleSync,
+  onOpen
+}) {
+  const [tab, setTab] = useState("me");
+  const [sort, setSort] = useState("priority");
+  const tabs = [{
+    key: "me",
+    label: "Мои"
+  }, {
+    key: "pool",
+    label: "Свободные"
+  }, {
+    key: "done",
+    label: "Готово"
+  }];
+  const filtered = useMemo(() => {
+    let list = tasks.filter(t => {
+      if (tab === "done") return t.status === "done";
+      if (tab === "pool") return t.assignee === "pool" && t.status !== "done";
+      return t.assignee === "me" && t.status !== "done";
+    });
+    const pRank = {
+      urgent: 0,
+      normal: 1,
+      low: 2
+    };
+    const dRank = {
+      overdue: 0,
+      now: 1,
+      soon: 2,
+      ok: 3,
+      done: 4
+    };
+    return [...list].sort((a, b) => sort === "priority" ? pRank[a.priority] - pRank[b.priority] || dRank[a.deadline.state] - dRank[b.deadline.state] : dRank[a.deadline.state] - dRank[b.deadline.state]);
+  }, [tasks, tab, sort]);
+  const myActive = tasks.filter(t => t.assignee === "me" && t.status !== "done");
+  const urgentCount = myActive.filter(t => t.priority === "urgent").length;
+  const overdueCount = myActive.filter(t => t.deadline.state === "overdue").length;
+  return /*#__PURE__*/_jsxDEV("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      height: "100%"
+    },
+    children: [/*#__PURE__*/_jsxDEV("div", {
+      style: {
+        background: T.header,
+        color: T.headerText,
+        padding: "12px 16px 14px"
+      },
+      children: [/*#__PURE__*/_jsxDEV("div", {
+        style: {
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start"
+        },
+        children: [/*#__PURE__*/_jsxDEV("div", {
+          children: [/*#__PURE__*/_jsxDEV("div", {
+            style: {
+              fontSize: 17,
+              fontWeight: 700
+            },
+            children: "Мои задачи"
+          }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+            style: {
+              fontSize: 13,
+              color: T.headerMuted,
+              marginTop: 1
+            },
+            children: "Айгүль · Операционист · Маркет №14"
+          }, void 0, false)]
+        }, void 0, true), /*#__PURE__*/_jsxDEV("button", {
+          onClick: toggleSync,
+          style: {
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 6,
+            cursor: "pointer",
+            background: online ? "rgba(255,255,255,.10)" : T.warnBg,
+            color: online ? T.headerText : T.warn,
+            border: "none",
+            fontSize: 12,
+            fontWeight: 700,
+            padding: "7px 11px",
+            borderRadius: 20
+          },
+          children: [online ? /*#__PURE__*/_jsxDEV(Wifi, {
+            size: 14
+          }, void 0, false) : /*#__PURE__*/_jsxDEV(WifiOff, {
+            size: 14
+          }, void 0, false), online ? "Синхр. 12:44" : `Офлайн · ${queue}`, online && /*#__PURE__*/_jsxDEV(RefreshCw, {
+            size: 12
+          }, void 0, false)]
+        }, void 0, true)]
+      }, void 0, true), /*#__PURE__*/_jsxDEV("div", {
+        style: {
+          display: "flex",
+          gap: 8,
+          marginTop: 12
+        },
+        children: [/*#__PURE__*/_jsxDEV(SummaryStat, {
+          n: myActive.length,
+          label: "активных"
+        }, void 0, false), /*#__PURE__*/_jsxDEV(SummaryStat, {
+          n: urgentCount,
+          label: "срочных",
+          tone: "urgent"
+        }, void 0, false), /*#__PURE__*/_jsxDEV(SummaryStat, {
+          n: overdueCount,
+          label: "просрочено",
+          tone: "urgent"
+        }, void 0, false)]
+      }, void 0, true)]
+    }, void 0, true), /*#__PURE__*/_jsxDEV("div", {
+      style: {
+        background: T.card,
+        borderBottom: `1px solid ${T.border}`,
+        padding: "10px 12px"
+      },
+      children: [/*#__PURE__*/_jsxDEV("div", {
+        style: {
+          display: "flex",
+          gap: 6
+        },
+        children: tabs.map(tb => {
+          const on = tab === tb.key;
+          const cnt = tb.key === "done" ? tasks.filter(t => t.status === "done").length : tb.key === "pool" ? tasks.filter(t => t.assignee === "pool" && t.status !== "done").length : myActive.length;
+          return /*#__PURE__*/_jsxDEV("button", {
+            onClick: () => setTab(tb.key),
+            style: {
+              flex: 1,
+              padding: "9px 6px",
+              borderRadius: 10,
+              cursor: "pointer",
+              fontSize: 13.5,
+              fontWeight: 700,
+              border: "none",
+              background: on ? T.primary : "#F1F4F4",
+              color: on ? "#fff" : T.muted
+            },
+            children: [tb.label, " ", /*#__PURE__*/_jsxDEV("span", {
+              style: {
+                opacity: 0.8
+              },
+              children: cnt
+            }, void 0, false)]
+          }, tb.key, true);
+        })
+      }, void 0, false), tab !== "done" && /*#__PURE__*/_jsxDEV("button", {
+        onClick: () => setSort(s => s === "priority" ? "deadline" : "priority"),
+        style: {
+          marginTop: 8,
+          background: "transparent",
+          border: "none",
+          cursor: "pointer",
+          fontSize: 12.5,
+          color: T.muted,
+          fontWeight: 600,
+          padding: 2
+        },
+        children: ["Сортировка: ", sort === "priority" ? "по приоритету" : "по дедлайну", " ⇅"]
+      }, void 0, true)]
+    }, void 0, true), /*#__PURE__*/_jsxDEV("div", {
+      style: {
+        flex: 1,
+        overflowY: "auto",
+        padding: 12,
+        background: T.bg
+      },
+      children: filtered.length === 0 ? /*#__PURE__*/_jsxDEV("div", {
+        style: {
+          textAlign: "center",
+          color: T.faint,
+          padding: "48px 20px"
+        },
+        children: [/*#__PURE__*/_jsxDEV(CircleCheck, {
+          size: 40,
+          color: T.faint
+        }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+          style: {
+            fontSize: 15,
+            fontWeight: 700,
+            color: T.muted,
+            marginTop: 10
+          },
+          children: "Задач нет"
+        }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+          style: {
+            fontSize: 13.5,
+            marginTop: 4
+          },
+          children: "Свободные задачи можно взять во вкладке «Свободные»."
+        }, void 0, false)]
+      }, void 0, true) : filtered.map(t => /*#__PURE__*/_jsxDEV(TaskCard, {
+        task: t,
+        onOpen: onOpen
+      }, t.id, false))
+    }, void 0, false)]
+  }, void 0, true);
+}
+function SummaryStat({
+  n,
+  label,
+  tone
+}) {
+  return /*#__PURE__*/_jsxDEV("div", {
+    style: {
+      flex: 1,
+      background: "rgba(255,255,255,.08)",
+      borderRadius: 12,
+      padding: "9px 10px"
+    },
+    children: [/*#__PURE__*/_jsxDEV("div", {
+      style: {
+        fontSize: 22,
+        fontWeight: 800,
+        fontVariantNumeric: "tabular-nums",
+        color: tone === "urgent" && n > 0 ? "#FF9A9A" : T.headerText
+      },
+      children: n
+    }, void 0, false), /*#__PURE__*/_jsxDEV("div", {
+      style: {
+        fontSize: 11.5,
+        color: T.headerMuted
+      },
+      children: label
+    }, void 0, false)]
+  }, void 0, true);
+}
+
+// ---- Корневой компонент -------------------------------------
+function App() {
+  const [vw, setVw] = React.useState(typeof window !== "undefined" ? window.innerWidth : 390);
+  React.useEffect(() => {
+    const h = () => setVw(window.innerWidth);
+    window.addEventListener("resize", h);
+    return () => window.removeEventListener("resize", h);
+  }, []);
+  const small = vw <= 500;
+  const [tasks, setTasks] = useState(INITIAL_TASKS);
+  const [nav, setNav] = useState("tasks");
+  const [selectedId, setSelectedId] = useState(null);
+  const [activeOp, setActiveOp] = useState(null);
+  const [online, setOnline] = useState(false);
+  const [queue, setQueue] = useState(3);
+  const [toastMsg, setToastMsg] = useState(null);
+  const [scanCfg, setScanCfg] = useState(null);
+  const toast = m => {
+    setToastMsg(m);
+    setTimeout(() => setToastMsg(null), 2200);
+  };
+  const selected = tasks.find(t => t.id === selectedId) || null;
+  const update = (id, patch) => setTasks(ts => ts.map(t => t.id === id ? {
+    ...t,
+    ...patch
+  } : t));
+  const openScanner = cfg => setScanCfg(cfg);
+  const toggleSync = () => {
+    if (!online) {
+      setOnline(true);
+      setQueue(0);
+      toast("Синхронизация выполнена");
+    } else {
+      setOnline(false);
+      setQueue(3);
+      toast("Работаем офлайн — операции в очереди");
+    }
+  };
+  const startTask = t => update(t.id, {
+    status: "in_progress",
+    location: t.hidden && t.hiddenSubject ? "Кассовая зона" : t.location
+  });
+  const takeTask = t => {
+    update(t.id, {
+      assignee: "me"
+    });
+    toast("Задача взята в работу");
+  };
+  const scanTask = t => {
+    setTasks(ts => ts.map(x => x.id === t.id && x.progress && x.progress.done < x.progress.total ? {
+      ...x,
+      progress: {
+        ...x.progress,
+        done: x.progress.done + 1
+      }
+    } : x));
+    if (!online) setQueue(q => q + 1);
+  };
+  const complete = t => {
+    update(t.id, {
+      status: "done",
+      deadline: {
+        state: "done",
+        label: "Готово только что"
+      }
+    });
+    setSelectedId(null);
+    toast("Задача завершена");
+  };
+  const attachPhoto = t => {
+    update(t.id, {
+      photoAttached: true
+    });
+    toast("Фото прикреплено");
+  };
+  const cur = selected;
+  const op = activeOp ? OP_SPECS[activeOp] : null;
+  return /*#__PURE__*/_jsxDEV("div", {
+    style: {
+      minHeight: "100vh",
+      background: "#D7DDDE",
+      display: "grid",
+      placeItems: "center",
+      padding: small ? 0 : 16,
+      fontFamily: "-apple-system, 'Segoe UI', Roboto, sans-serif"
+    },
+    children: /*#__PURE__*/_jsxDEV("div", {
+      style: small ? {
+        width: "100vw",
+        height: "100dvh",
+        background: "#000",
+        borderRadius: 0,
+        padding: 0
+      } : {
+        width: 390,
+        height: 820,
+        maxHeight: "94vh",
+        background: "#000",
+        borderRadius: 40,
+        padding: 9,
+        boxShadow: "0 20px 60px rgba(0,0,0,.35)"
+      },
+      children: /*#__PURE__*/_jsxDEV("div", {
+        style: {
+          width: "100%",
+          height: "100%",
+          background: T.bg,
+          borderRadius: small ? 0 : 32,
+          overflow: "hidden",
+          display: "flex",
+          flexDirection: "column",
+          position: "relative"
+        },
+        children: [/*#__PURE__*/_jsxDEV("div", {
+          style: {
+            background: T.header,
+            color: T.headerText,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "8px 18px 2px",
+            fontSize: 12.5,
+            fontWeight: 600
+          },
+          children: [/*#__PURE__*/_jsxDEV("span", {
+            style: {
+              fontVariantNumeric: "tabular-nums"
+            },
+            children: "12:47"
+          }, void 0, false), /*#__PURE__*/_jsxDEV("span", {
+            style: {
+              display: "inline-flex",
+              gap: 6,
+              alignItems: "center"
+            },
+            children: [/*#__PURE__*/_jsxDEV(Signal, {
+              size: 13
+            }, void 0, false), " ", online ? /*#__PURE__*/_jsxDEV(Wifi, {
+              size: 13
+            }, void 0, false) : /*#__PURE__*/_jsxDEV(WifiOff, {
+              size: 13
+            }, void 0, false), " ", /*#__PURE__*/_jsxDEV(Battery, {
+              size: 15
+            }, void 0, false), " 78%"]
+          }, void 0, true)]
+        }, void 0, true), /*#__PURE__*/_jsxDEV("div", {
+          style: {
+            flex: 1,
+            overflow: "hidden",
+            display: "flex",
+            flexDirection: "column"
+          },
+          children: op ? /*#__PURE__*/_jsxDEV(OperationFlow, {
+            op: op,
+            onExit: () => setActiveOp(null),
+            openScanner: openScanner,
+            toast: toast
+          }, void 0, false) : cur ? /*#__PURE__*/_jsxDEV(TaskDetail, {
+            task: cur,
+            onBack: () => setSelectedId(null),
+            onStart: () => startTask(cur),
+            onTake: () => takeTask(cur),
+            onScan: () => scanTask(cur),
+            onPhoto: () => attachPhoto(cur),
+            onComplete: () => complete(cur),
+            openScanner: openScanner,
+            toast: toast
+          }, void 0, false) : nav === "tasks" ? /*#__PURE__*/_jsxDEV(TasksScreen, {
+            tasks: tasks,
+            online: online,
+            queue: queue,
+            toggleSync: toggleSync,
+            onOpen: setSelectedId
+          }, void 0, false) : nav === "ops" ? /*#__PURE__*/_jsxDEV("div", {
+            style: {
+              flex: 1,
+              overflowY: "auto"
+            },
+            children: [/*#__PURE__*/_jsxDEV(ScreenTitle, {
+              children: "Операции"
+            }, void 0, false), /*#__PURE__*/_jsxDEV(OperationsScreen, {
+              onOpen: setActiveOp,
+              toast: toast
+            }, void 0, false)]
+          }, void 0, true) : /*#__PURE__*/_jsxDEV("div", {
+            style: {
+              flex: 1,
+              overflowY: "auto"
+            },
+            children: [/*#__PURE__*/_jsxDEV(ScreenTitle, {
+              children: "Смена"
+            }, void 0, false), /*#__PURE__*/_jsxDEV(ShiftScreen, {
+              online: online,
+              queue: queue,
+              toast: toast
+            }, void 0, false)]
+          }, void 0, true)
+        }, void 0, false), !cur && !op && /*#__PURE__*/_jsxDEV(BottomNav, {
+          active: nav,
+          setActive: setNav,
+          taskCount: tasks.filter(t => t.assignee === "me" && t.status !== "done").length
+        }, void 0, false), toastMsg && /*#__PURE__*/_jsxDEV("div", {
+          style: {
+            position: "absolute",
+            bottom: 78,
+            left: 16,
+            right: 16,
+            background: T.ink,
+            color: "#fff",
+            fontSize: 13.5,
+            fontWeight: 600,
+            padding: "12px 14px",
+            borderRadius: 12,
+            textAlign: "center",
+            boxShadow: "0 6px 20px rgba(0,0,0,.3)",
+            zIndex: 40
+          },
+          children: toastMsg
+        }, void 0, false), scanCfg && /*#__PURE__*/_jsxDEV(ScannerModal, {
+          title: scanCfg.title,
+          initialView: scanCfg.initialView,
+          onAdd: scanCfg.onAdd,
+          onClose: () => setScanCfg(null)
+        }, void 0, false)]
+      }, void 0, true)
+    }, void 0, false)
+  }, void 0, false);
+}
+function ScreenTitle({
+  children
+}) {
+  return /*#__PURE__*/_jsxDEV("div", {
+    style: {
+      background: T.header,
+      color: T.headerText,
+      padding: "14px 16px",
+      fontSize: 17,
+      fontWeight: 700
+    },
+    children: children
+  }, void 0, false);
+}
+ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
+</script>
+</body>
+</html>
